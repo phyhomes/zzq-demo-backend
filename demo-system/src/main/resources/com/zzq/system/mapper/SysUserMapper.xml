@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzq.system.mapper.SysUserMapper">
+    <resultMap id="SysUserResult" type="com.zzq.framework.domain.entity.SysUser">
+        <id property="id" column="id"/>
+        <result property="personId" column="person_id"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="name" column="name"/>
+        <result property="avatar" column="avatar"/>
+        <result property="loginIp" column="login_ip"/>
+        <result property="loginTime" column="login_time"/>
+        <result property="pwdUpdateTime" column="pwd_update_time"/>
+        <result property="allowed" column="allowed"/>
+        <result property="status" column="status"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+    <update id="updateLoginInfo" parameterType="SysUser">
+        update sys_user
+        set login_ip = #{loginIp}, login_time = now()
+        where id = #{userId}
+    </update>
+    <select id="selectUserByUserName" resultMap="SysUserResult">
+        select * from sys_user where username = #{username} and del_flag = 0
+    </select>
+</mapper>

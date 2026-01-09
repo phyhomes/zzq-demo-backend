@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zzq.system.mapper.SysRoleMapper">
+    <resultMap id="SysRoleResult" type="SysRole">
+        <id property="id" column="role_id"/>
+        <result property="roleName" column="role_name"/>
+        <result property="roleKey" column="role_key"/>
+        <result property="seq" column="seq"/>
+        <result property="dataScope" column="data_scope"/>
+        <result property="menuAssociateFlag" column="menu_associate_flag"/>
+        <result property="deptAssociateFlag" column="dept_associate_flag"/>
+        <result property="status" column="status"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+
+
+    <sql id="roleVo">
+        select r.id role_id, r.role_name, r.role_key, r.seq,
+               r.data_scope, r.menu_associate_flag, r.dept_associate_flag, r.status, r.remark
+    </sql>
+
+</mapper>

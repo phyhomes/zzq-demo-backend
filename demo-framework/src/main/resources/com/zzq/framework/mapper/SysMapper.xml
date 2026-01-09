@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.zzq.framework.mapper.SysMapper">
+    <resultMap id="SysUserResult" type="com.zzq.framework.domain.entity.SysUser">
+        <id property="id" column="id"/>
+        <result property="personId" column="person_id"/>
+        <result property="deptId" column="dept_id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <result property="name" column="name"/>
+        <result property="avatar" column="avatar"/>
+        <result property="loginIp" column="login_ip"/>
+        <result property="loginTime" column="login_time"/>
+        <result property="pwdUpdateTime" column="pwd_update_time"/>
+        <result property="allowed" column="allowed"/>
+        <result property="status" column="status"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <resultMap id="SysDeptResult" type="com.zzq.framework.domain.entity.SysDept">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="level" column="level"/>
+        <result property="seq" column="seq"/>
+        <result property="seqGlobal" column="seq_global"/>
+        <result property="status" column="status"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remark" column="remark"/>
+    </resultMap>
+
+    <resultMap id="SysRoleResult" type="com.zzq.framework.domain.entity.SysRole">
+        <id property="id" column="role_id"/>
+        <result property="roleName" column="role_name"/>
+        <result property="roleKey" column="role_key"/>
+        <result property="seq" column="seq"/>
+        <result property="dataScope" column="data_scope"/>
+        <result property="menuAssociateFlag" column="menu_associate_flag"/>
+        <result property="deptAssociateFlag" column="dept_associate_flag"/>
+        <result property="status" column="status"/>
+        <result property="remark" column="remark"/>
+        <result property="delFlag" column="del_flag"/>
+    </resultMap>
+
+    <resultMap id="SysRoleDTOResult" type="com.zzq.framework.domain.dto.SysRoleDTO" extends="SysRoleResult">
+        <!--  column="{参数名 = 列名}"      -->
+        <collection property="depts" ofType="SysDept" column="role_id" select="selectDeptsByRoleId" >
+            <id property="id" column="id"/>
+            <result property="name" column="name"/>
+        </collection>
+        <collection property="permissions" ofType="String" javaType="java.util.Set" select="selectPermissionsByRoleId" column="role_id"/>
+        <collection property="menuIds" ofType="java.lang.Long" select="selectMenuIdsByRoleId" column="role_id"/>
+<!--        </collection>-->
+    </resultMap>
+
+    <sql id="roleVo">
+        select r.id as role_id, r.role_name, r.role_key, r.seq,
+               r.data_scope, r.menu_associate_flag, r.dept_associate_flag, r.status, r.remark, r.del_flag
+    </sql>
+
+    <insert id="insertLoginInfo" parameterType="SysLoginInfo">
+        insert into sys_login_info(username, ipaddr, location, browser, os, status, msg, login_time)
+        values (#{username}, #{ipaddr}, #{location}, #{browser}, #{os}, #{status}, #{msg}, now())
+    </insert>
+
+    <select id="selectUserByUserName" resultMap="SysUserResult">
+        select * from sys_user where username = #{username} and del_flag = 0
+    </select>
+    <select id="selectDeptById" resultMap="SysDeptResult">
+        select * from sys_dept where id = #{deptId} and del_flag = 0
+    </select>
+
+    <select id="selectRolesByUserId" resultMap="SysRoleDTOResult">
+        <include refid="roleVo"></include>
+        from sys_user u
+        left join sys_user_role ur on u.id = ur.user_id
+        left join sys_role r on ur.role_id = r.id
+        where u.id = #{userId} and r.del_flag = 0
+        order by r.seq is null, r.seq
+    </select>
+
+    <select id="selectDeptIdsByRoleId" parameterType="java.lang.Long" resultType="java.lang.Long">
+        select rd.dept_id, d.name
+        from sys_role_dept rd
+            left join sys_dept d on d.id = rd.dept_id
+        where rd.role_id = #{roleId}
+    </select>
+
+    <!-- 根据角色ID查询菜单ID列表 -->
+    <select id="selectMenuIdsByRoleId" parameterType="java.lang.Long" resultType="java.lang.Long">
+        SELECT menu_id as menuIds
+        FROM sys_role_menu
+        WHERE role_id = #{roleId}
+    </select>
+
+    <!-- 根据角色ID查询权限字符串列表 -->
+    <select id="selectPermissionsByRoleId" parameterType="java.lang.Long" resultType="String">
+        SELECT m.perms
+        FROM sys_role_menu rm
+                 left join sys_menu m ON rm.menu_id = m.id
+        WHERE rm.role_id = #{roleId} AND m.perms IS NOT NULL AND m.type in ("C", "F")
+    </select>
+
+    <select id="selectDeptsByRoleId" parameterType="Long" resultType="SysDept">
+        select d.id, d.name
+        from sys_role_dept rd
+        left join sys_dept d on d.id = rd.dept_id
+        where rd.role_id = #{roleId} and d.del_flag = #{delFlag}
+    </select>
+    <select id="selectPermsByUserId" resultType="java.lang.String">
+        select m.perms
+            from sys_user u
+        left join sys_user_role ur on u.id = ur.user_id
+        left join sys_role r on ur.role_id = r.id
+        left join sys_role_menu rm on r.id = rm.role_id
+        left join sys_menu m on rm.menu_id = m.id
+        where u.id = #{userId} and m.perms IS NOT NULL and m.type in ("C", "F") and r.del_flag = 0 and m.status = 1 and r.status = 1
+    </select>
+</mapper>
