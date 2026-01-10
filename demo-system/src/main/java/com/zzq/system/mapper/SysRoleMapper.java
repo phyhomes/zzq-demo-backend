@@ -1,9 +1,9 @@
 package com.zzq.system.mapper;
 
-import com.zzq.framework.domain.dto.SysRoleDTO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @Project : zzq-demo-backend
@@ -13,6 +13,24 @@ import java.util.List;
  */
 @Mapper
 public interface SysRoleMapper {
+    /**
+     * 根据用户ID获取权限列表
+     *
+     * @param id 用户ID
+     * @return 权限列表
+     */
+    Set<String> selectRoleKeysByUserId(Long id);
+
+    /**
+     * 根据用户ID获取角色ID列表
+     *
+     * @param id 用户ID
+     * @return 角色ID列表
+     */
+    List<Long> selectRoleIdsByUserId(Long id);
+
+    Set<String> selectPermissionsByRoleIds(List<Long> roleIds);
+
 
 //    public List<SysRoleDTO> selectRolesByUserId(Long userId);
 }

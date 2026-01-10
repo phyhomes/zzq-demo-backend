@@ -1,6 +1,7 @@
 package com.zzq.common.config;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
@@ -42,8 +43,10 @@ public class JacksonConfig {
     private String DEFAULT_TIME_FORMAT;
 
     /**
-     * 配置ObjectMapper
-     *
+     * <p>配置ObjectMapper<p/>
+     * <p>要使用这个配置了的ObjectMapper，需要将ObjectMapper注入到其他地方<p/>
+     * <p>private ObjectMapper objectMapper<p/>
+     * <p>重新new的ObjectMapper会丢失自定义的配置 <p/>
      * @return ObjectMapper
      */
     @Bean
@@ -65,7 +68,9 @@ public class JacksonConfig {
         objectMapper
                 .setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"))
                 .registerModule(javaTimeModule)
-                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+                .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+                // 忽略在json中存在，但是Java对象不存在的属性
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         return objectMapper;
     }
 

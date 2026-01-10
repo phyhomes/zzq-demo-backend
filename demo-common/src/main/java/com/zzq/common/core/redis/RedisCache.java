@@ -1,5 +1,6 @@
 package com.zzq.common.core.redis;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.Resource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundSetOperations;
@@ -27,6 +28,9 @@ public class RedisCache {
 
     @Resource
     private RedisTemplate redisTemplate;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
 
     /**
@@ -106,10 +110,11 @@ public class RedisCache {
      * @param key 缓存键值
      * @return 缓存键值对应的数据
      */
-    public Object getCacheObject(final String key)
+    public <T> T getCacheObject(final String key, Class<T> toValueType)
     {
         ValueOperations<String, Object> operation = redisTemplate.opsForValue();
-        return operation.get(key);
+        Object obj = operation.get(key);
+        return objectMapper.convertValue(obj, toValueType);
     }
 
     /**

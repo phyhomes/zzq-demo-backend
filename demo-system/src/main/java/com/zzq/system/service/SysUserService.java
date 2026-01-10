@@ -1,5 +1,6 @@
 package com.zzq.system.service;
 
+import com.zzq.common.core.domain.AjaxResult;
 import com.zzq.framework.domain.entity.SysUser;
 
 /**
@@ -21,7 +22,14 @@ public interface SysUserService {
      * 根据用户名查询用户
      *
      * @param username 用户名
-     * @return {@link SysUser} 用户对象信息
+     * @return 用户对象信息
      */
     public SysUser selectUserByUserName(String username);
+
+    /**
+     * 获取当前登录用户信息
+     *
+     * @return 用户信息
+     */
+    AjaxResult getUserInfo();
 }

@@ -1,11 +1,24 @@
 package com.zzq.system.service.impl;
 
+import com.zzq.common.constant.CacheConstants;
+import com.zzq.common.constant.Constants;
+import com.zzq.common.core.domain.AjaxResult;
 import com.zzq.common.core.redis.RedisCache;
+import com.zzq.framework.domain.dto.LoginUserDTO;
 import com.zzq.framework.domain.entity.SysUser;
+import com.zzq.framework.service.impl.TokenServiceImpl;
+import com.zzq.framework.utils.SecurityUtils;
 import com.zzq.system.mapper.SysUserMapper;
+import com.zzq.system.service.SysRoleService;
 import com.zzq.system.service.SysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Project : zzq-demo-backend
@@ -21,6 +34,9 @@ public class SysUserServiceImpl implements SysUserService {
     @Autowired
     private SysUserMapper sysUserMapper;
 
+    @Autowired
+    private SysRoleService sysRoleService;
+
     @Override
     public void updateLoginInfo(Long userId, String loginIp) {
         sysUserMapper.updateLoginInfo(userId, loginIp);
@@ -29,5 +45,43 @@ public class SysUserServiceImpl implements SysUserService {
     @Override
     public SysUser selectUserByUserName(String username) {
         return sysUserMapper.selectUserByUserName(username);
+    }
+
+    @Override
+    public AjaxResult getUserInfo() {
+        LoginUserDTO loginUser = SecurityUtils.getLoginUser();
+        SysUser user = loginUser.getUser();
+        // 角色集合（roleKey）
+        Set<String> roleKeys = new HashSet<>();
+        if (user.isAdmin()) {
+            roleKeys.add(Constants.SUPER_ADMIN);
+        } else {
+            roleKeys.addAll(sysRoleService.getRoleKeysByUserId(user.getId()));
+        }
+        // 权限集合（权限字符串）
+        Set<String> permissions = sysRoleService.getPermissionsByUserId(user.getId());
+        if (!loginUser.getPermissions().equals(permissions))
+        {
+            loginUser.setPermissions(permissions);
+
+            /** 和{@link TokenServiceImpl.saveUuid() }一样 */
+            String uuid = loginUser.getUuid();
+            String key = getUserKey(uuid);
+            // 保存时的有效期：登录时间 + 有效期 - 当前时间
+            Long expireTime = loginUser.getLoginTime() + loginUser.getExpireTime() - System.currentTimeMillis();
+            // 缓存用户信息
+            redisCache.setCacheObject(key, loginUser, expireTime, TimeUnit.MILLISECONDS);
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("user", user);
+        result.put("permissions", permissions);
+        result.put("roleKeys", roleKeys);
+        return AjaxResult.success(result);
+    }
+
+    private String getUserKey(String uuid)
+    {
+        return CacheConstants.LOGIN_USER_KEY + uuid;
     }
 }

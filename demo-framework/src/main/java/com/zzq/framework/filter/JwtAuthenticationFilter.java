@@ -1,5 +1,7 @@
 package com.zzq.framework.filter;
 
+import com.zzq.common.constant.HttpStatus;
+import com.zzq.common.constant.ModuleConstants;
 import com.zzq.common.exception.BaseException;
 import com.zzq.framework.domain.dto.LoginUserDTO;
 import com.zzq.framework.service.TokenService;
@@ -74,7 +76,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         } catch (Exception e) {
             // 抛出没有预知的异常
             log.error("Authentication对象封装失败：{}", e.getMessage());
-            throw new BaseException("auth", e.getMessage());
+            throw new BaseException(ModuleConstants.AUTH, HttpStatus.UNAUTHORIZED, e.getMessage());
         }
         // 执行完毕，继续执行下一个过滤器
         filterChain.doFilter(request, response);

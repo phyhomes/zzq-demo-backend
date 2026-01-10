@@ -54,13 +54,9 @@
 
     <resultMap id="SysRoleDTOResult" type="com.zzq.framework.domain.dto.SysRoleDTO" extends="SysRoleResult">
         <!--  column="{参数名 = 列名}"      -->
-        <collection property="depts" ofType="SysDept" column="role_id" select="selectDeptsByRoleId" >
-            <id property="id" column="id"/>
-            <result property="name" column="name"/>
-        </collection>
+        <collection property="deptIds" ofType="Long" column="role_id" select="selectDeptsByRoleId" />
         <collection property="permissions" ofType="String" javaType="java.util.Set" select="selectPermissionsByRoleId" column="role_id"/>
         <collection property="menuIds" ofType="java.lang.Long" select="selectMenuIdsByRoleId" column="role_id"/>
-<!--        </collection>-->
     </resultMap>
 
     <sql id="roleVo">
@@ -81,7 +77,7 @@
     </select>
 
     <select id="selectRolesByUserId" resultMap="SysRoleDTOResult">
-        <include refid="roleVo"></include>
+        <include refid="roleVo"/>
         from sys_user u
         left join sys_user_role ur on u.id = ur.user_id
         left join sys_role r on ur.role_id = r.id
@@ -111,14 +107,14 @@
         WHERE rm.role_id = #{roleId} AND m.perms IS NOT NULL AND m.type in ("C", "F")
     </select>
 
-    <select id="selectDeptsByRoleId" parameterType="Long" resultType="SysDept">
-        select d.id, d.name
+    <select id="selectDeptsByRoleId" parameterType="Long" resultType="Long">
+        select d.id
         from sys_role_dept rd
         left join sys_dept d on d.id = rd.dept_id
-        where rd.role_id = #{roleId} and d.del_flag = #{delFlag}
+        where rd.role_id = #{roleId} and d.del_flag = 0
     </select>
     <select id="selectPermsByUserId" resultType="java.lang.String">
-        select m.perms
+        select DISTINCT m.perms
             from sys_user u
         left join sys_user_role ur on u.id = ur.user_id
         left join sys_role r on ur.role_id = r.id

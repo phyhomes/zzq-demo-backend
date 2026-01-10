@@ -1,14 +1,17 @@
-package com.zzq.common.utils;
+package com.zzq.framework.utils;
 
 import com.zzq.common.constant.Constants;
+import com.zzq.common.constant.HttpStatus;
+import com.zzq.common.constant.ModuleConstants;
+import com.zzq.common.exception.BaseException;
+import com.zzq.common.utils.StringUtils;
+import com.zzq.framework.domain.dto.LoginUserDTO;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.util.PatternMatchUtils;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @Project : zzq-demo-backend
@@ -17,6 +20,71 @@ import java.util.stream.Collectors;
  * @Desc : SpringSecurity 相关的工具类
  */
 public class SecurityUtils {
+    /**
+     * 用户ID
+     * @return 用户ID
+     **/
+    public static Long getUserId()
+    {
+        try
+        {
+            return getLoginUser().getUserId();
+        }
+        catch (Exception e)
+        {
+            throw new BaseException(ModuleConstants.AUTH, HttpStatus.UNAUTHORIZED, "获取用户ID异常：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 获取部门ID
+     * @return 部门ID
+     **/
+    public static Long getDeptId()
+    {
+        try
+        {
+            return getLoginUser().getDeptId();
+        }
+        catch (Exception e)
+        {
+            throw new BaseException(ModuleConstants.AUTH, HttpStatus.UNAUTHORIZED, "获取部门ID异常：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 获取用户的用户名
+     * @return 用户名
+     **/
+    public static String getUsername()
+    {
+        try
+        {
+            return getLoginUser().getUsername();
+        }
+        catch (Exception e)
+        {
+            throw new BaseException(ModuleConstants.AUTH, HttpStatus.UNAUTHORIZED, "获取用户名异常：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 获取登录用户
+     * @return 登录用户对象
+     **/
+    public static LoginUserDTO getLoginUser()
+    {
+        try
+        {
+            return (LoginUserDTO) getAuthentication().getPrincipal();
+        }
+        catch (Exception e)
+        {
+            throw new BaseException(ModuleConstants.AUTH, HttpStatus.UNAUTHORIZED, "获取登录对象异常：" + e.getMessage());
+        }
+    }
+
+
 
 
     /**
@@ -54,19 +122,6 @@ public class SecurityUtils {
         return passwordEncoder.matches(rawPassword, encodedPassword);
     }
 
-    /**
-     * 是否为管理员
-     * RuoYi框架中约定ID为1的用户为管理员，拥有最高权限。
-     *
-     * @param userId 用户ID
-     * @return 结果
-     */
-    public static boolean isAdmin(Long userId)
-    {
-        // 判断用户ID是否等于1，约定用户ID为1的是管理员
-        return userId != null && 1L == userId;
-    }
-
 
     /**
      * 判断是否包含权限
@@ -75,7 +130,7 @@ public class SecurityUtils {
      * @param permission 权限字符串
      * @return 用户是否具备某权限
      */
-    public static boolean hasPermi(Collection<String> authorities, String permission)
+    public static boolean hasPermission(Collection<String> authorities, String permission)
     {
         return authorities.stream().filter(StringUtils::isNotBlank)
                 .anyMatch(x -> Constants.ALL_PERMISSION.equals(x) || PatternMatchUtils.simpleMatch(x, permission));

@@ -3,7 +3,7 @@ package com.zzq.framework.service.impl;
 import com.zzq.common.constant.CacheConstants;
 import com.zzq.common.constant.Constants;
 import com.zzq.common.core.redis.RedisCache;
-import com.zzq.common.utils.SecurityUtils;
+import com.zzq.framework.utils.SecurityUtils;
 import com.zzq.framework.security.context.AuthenticationContextHolder;
 import com.zzq.framework.service.SysService;
 import com.zzq.framework.domain.dto.LoginUserDTO;
@@ -145,7 +145,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         String username = usernamePasswordAuthenticationToken.getName();
         String password = usernamePasswordAuthenticationToken.getCredentials().toString();
 
-        Integer loginFailCount = (Integer) redisCache.getCacheObject(getCacheKey(username));
+        Integer loginFailCount = redisCache.getCacheObject(getCacheKey(username), Integer.class);
         // 第一次登录，初始化缓存
         if (loginFailCount == null) {
             loginFailCount = 0;

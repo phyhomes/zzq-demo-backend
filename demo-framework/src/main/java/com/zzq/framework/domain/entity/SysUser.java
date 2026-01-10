@@ -96,6 +96,7 @@ public class SysUser extends BaseEntity {
     /**
      * 是否（1是，0否）
      */
+    @JsonIgnore
     private Integer delFlag;
 
     public SysUser() {
@@ -107,15 +108,17 @@ public class SysUser extends BaseEntity {
 
     /**
      * 根据id判断是否是超级管理员Admin
+     * ID为1的用户为管理员
+     * @return  true/false
      */
     public boolean isAdmin()
     {
-        return isAdmin(this.id);
+        return isAdmin(id);
     }
 
-    public static boolean isAdmin(Long id)
+    public static boolean isAdmin(Long userId)
     {
-        return id != null && 1L == id;
+        return userId != null && 1L == userId;
     }
 
     public Long getId() {

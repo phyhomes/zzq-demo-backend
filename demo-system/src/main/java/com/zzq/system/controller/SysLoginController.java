@@ -3,9 +3,11 @@ package com.zzq.system.controller;
 import com.zzq.common.core.domain.AjaxResult;
 import com.zzq.system.domain.LoginQuery;
 import com.zzq.system.service.SysLoginService;
+import com.zzq.system.service.SysUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +24,9 @@ public class SysLoginController {
 
     @Autowired
     private SysLoginService sysLoginService;
+    @Autowired
+    private SysUserService sysUserService;
+
     /**
      * 登录方法
      *
@@ -30,9 +35,18 @@ public class SysLoginController {
      */
     @PostMapping("/login")
     public AjaxResult login(@RequestBody LoginQuery loginQuery) {
-        System.out.println(loginQuery);
         log.info("用户登录，登录信息：{}", loginQuery);
         return sysLoginService.login(loginQuery);
+    }
+
+    /**
+     * 获取用户信息
+     *
+     * @return 用户信息
+     */
+    @GetMapping("/getInfo")
+    public AjaxResult getInfo() {
+        return sysUserService.getUserInfo();
     }
 
 

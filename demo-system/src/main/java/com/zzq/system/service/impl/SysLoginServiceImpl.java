@@ -122,7 +122,7 @@ public class SysLoginServiceImpl implements SysLoginService {
             // 拼接验证码的key，对传入的uuid进行防null处理，设置默认值
             String verifyKey = CacheConstants.CAPTCHA_CODE_KEY + StringUtils.defaultString(uuid, "");
             // 从redis缓存中获取验证码
-            String captcha = (String) redisCache.getCacheObject(verifyKey);
+            String captcha = redisCache.getCacheObject(verifyKey, String.class);
             // 验证码不存在，记录日志，抛出验证码失效异常
             if (captcha == null)
             {
@@ -149,8 +149,8 @@ public class SysLoginServiceImpl implements SysLoginService {
      * @param username 用户名
      * @param password 用户密码
      */
-    public void loginPreCheck(String username, String password)
-    {
+    public void loginPreCheck(String username, String password) {
+
         // 用户名或密码为空 错误
         if (StringUtils.isBlank(username) || StringUtils.isBlank(password))
         {
@@ -185,8 +185,11 @@ public class SysLoginServiceImpl implements SysLoginService {
      *
      * @param userId 用户ID
      */
-    public void recordLoginInfo(Long userId)
-    {
+    public void recordLoginInfo(Long userId){
+
         sysUserService.updateLoginInfo(userId, IpUtils.getIpAddr());
     }
+
+
+
 }

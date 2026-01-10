@@ -29,21 +29,19 @@ public class BaseEntity implements Serializable {
     private String searchValue;
 
     /** 创建者 */
+    @JsonIgnore
     private String createBy;
 
     /** 创建时间 */
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonIgnore
     private LocalDateTime createTime;
 
     /** 更新者 */
+    @JsonIgnore
     private String updateBy;
 
     /** 更新时间 */
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeDeserializer.class)
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonIgnore
     private LocalDateTime updateTime;
 
     /** 备注 */

@@ -1,5 +1,6 @@
 package com.zzq.framework.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.zzq.common.core.domain.BaseEntity;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -62,6 +63,7 @@ public class SysRole extends BaseEntity {
     /**
      * 是否已删除（1是，0否）
      */
+    @JsonIgnore
     private Integer delFlag;
 
     public SysRole() {

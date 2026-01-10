@@ -22,8 +22,8 @@ public class SysRoleDTO extends SysRole {
     private List<Long> menuIds;
 
     /** 部门组（数据权限） */
-    // private Long[] deptIds;
-    private List<SysDept> depts;
+    private List<Long> deptIds;
+    // private List<SysDept> depts;
 
     /** 角色权限集合 */
     private Set<String> permissions;
@@ -55,12 +55,12 @@ public class SysRoleDTO extends SysRole {
         this.menuIds = menuIds;
     }
 
-    public List<SysDept> getDepts() {
-        return depts;
+    public List<Long> getDeptIds() {
+        return deptIds;
     }
 
-    public void setDeptIds(List<SysDept> depts) {
-        this.depts = depts;
+    public void setDeptIds(List<Long> deptIds) {
+        this.deptIds = deptIds;
     }
 
     public Set<String> getPermissions() {

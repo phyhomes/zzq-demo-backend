@@ -1,5 +1,6 @@
 package com.zzq.framework.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.zzq.common.core.domain.BaseEntity;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -40,6 +41,7 @@ public class SysDept extends BaseEntity {
     private Integer status;
 
     /** 是否删除（1是，0否） */
+    @JsonIgnore
     private Integer delFlag;
 
     public SysDept() {

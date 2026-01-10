@@ -2,7 +2,6 @@ package com.zzq.framework.service.impl;
 
 import com.zzq.common.constant.CacheConstants;
 import com.zzq.common.constant.Constants;
-import com.zzq.common.constant.HttpStatus;
 import com.zzq.common.core.redis.RedisCache;
 import com.zzq.common.exception.BaseException;
 import com.zzq.common.pojo.ua.UserAgent;
@@ -109,7 +108,7 @@ public class TokenServiceImpl implements TokenService {
      */
     private Map<String, String> parseToken(HttpServletRequest request) {
         String authorizationHeader = request.getHeader(header);
-        if (StringUtils.isBlank(authorizationHeader) || authorizationHeader.startsWith(tokenPrefix + " ")){
+        if (StringUtils.isBlank(authorizationHeader) || !authorizationHeader.startsWith(tokenPrefix + " ")){
             // throw new BaseException("auth", HttpStatus.UNAUTHORIZED, "auth.failed");
             return null;
         }
@@ -131,7 +130,7 @@ public class TokenServiceImpl implements TokenService {
         }
         String userKey = getUserKey(claims.get(Constants.LOGIN_USER_KEY));
         // 从Token中获取登录用户信息，封装为LoginUser对象
-        return (LoginUserDTO) redisCache.getCacheObject(userKey);
+        return redisCache.getCacheObject(userKey, LoginUserDTO.class);
     }
 
     @Override
