@@ -1,7 +1,12 @@
 package com.zzq.system.service.impl;
 
+import com.zzq.common.constant.CacheConstants;
+import com.zzq.common.core.redis.RedisCache;
+import com.zzq.common.utils.StringUtils;
 import com.zzq.system.domain.entity.SysConfig;
+import com.zzq.system.mapper.SysConfigMapper;
 import com.zzq.system.service.SysConfigService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +19,16 @@ import java.util.List;
  */
 @Service
 public class SysConfigServiceImpl implements SysConfigService {
+    @Autowired
+    private RedisCache redisCache;
+
+    @Autowired
+    private SysConfigMapper sysConfigMapper;
+
+    public SysConfigServiceImpl(RedisCache redisCache) {
+        this.redisCache = redisCache;
+    }
+
     @Override
     public SysConfig selectConfigById(Long configId) {
         return null;
@@ -21,6 +36,19 @@ public class SysConfigServiceImpl implements SysConfigService {
 
     @Override
     public String selectConfigByKey(String configKey) {
+        // 先从Redis中查询键值
+        String configValue = redisCache.getCacheObject(getCacheKey(configKey), String.class);
+        if (!StringUtils.isBlank(configValue)){
+            return configValue;
+        }
+        // Redis中没有，从数据库中查询
+        SysConfig config = sysConfigMapper.selectConfigByIdOrKey(null, configKey);
+        if (config != null) {
+            redisCache.setCacheObject(getCacheKey(configKey), config.getValue());
+            return config.getValue();
+        }
+
+        // 都没有，返回空
         return "";
     }
 
@@ -67,5 +95,9 @@ public class SysConfigServiceImpl implements SysConfigService {
     @Override
     public boolean checkConfigKeyUnique(SysConfig config) {
         return false;
+    }
+
+    private String getCacheKey(String configKey) {
+        return CacheConstants.SYS_CONFIG_KEY + configKey;
     }
 }

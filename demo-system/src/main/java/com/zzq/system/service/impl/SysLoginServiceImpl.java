@@ -104,7 +104,7 @@ public class SysLoginServiceImpl implements SysLoginService {
         // 将登录信息存入到数据库
         recordLoginInfo(loginUser.getUserId());
         // 生成token并返回
-        return AjaxResult.success(tokenService.createToken(loginUser));
+        return AjaxResult.success("user.login.success", tokenService.createToken(loginUser));
     }
 
     /**

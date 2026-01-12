@@ -83,4 +83,14 @@ public class LoginQuery {
     {
         this.uuid = uuid;
     }
+
+    @Override
+    public String toString() {
+        return "LoginQuery{" +
+                "username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", code='" + code + '\'' +
+                ", uuid='" + uuid + '\'' +
+                '}';
+    }
 }

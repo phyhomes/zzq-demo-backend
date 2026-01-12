@@ -177,5 +177,33 @@ public class Constants {
      */
     public static final String[] JOB_ERROR_STR = { "java.net.URL", "javax.naming.InitialContext", "org.yaml.snakeyaml",
             "org.springframework", "org.apache", "com.ruoyi.common.utils.file", "com.ruoyi.common.config", "com.ruoyi.generator" };
+
+    /**
+     * 类型 - 目录
+     */
+    public static final String TYPE_CONTENT = "C";
+    /**
+     * 类型 - 菜单
+     */
+    public static final String TYPE_MENU = "M";
+    /**
+     * 类型 - 按钮
+     */
+    public static final String TYPE_BUTTON = "B";
+
+    /** 是否菜单外链（否） */
+    public static final Integer NO_FRAME = 0;
+    /** 是否菜单外链（是） */
+    public static final Integer YES_FRAME = 1;
+
+    /** Layout组件标识 */
+    public final static String LAYOUT = "Layout";
+
+    /** ParentView组件标识 */
+    public final static String PARENT_VIEW = "ParentView";
+
+    /** InnerLink组件标识 */
+    public final static String INNER_LINK = "InnerLink";
+
 }
 

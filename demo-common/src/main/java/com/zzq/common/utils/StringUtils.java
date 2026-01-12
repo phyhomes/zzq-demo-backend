@@ -1,5 +1,8 @@
 package com.zzq.common.utils;
 
+import com.zzq.common.constant.Constants;
+import org.apache.commons.lang3.Strings;
+
 /**
  * @Project : zzq-demo-backend
  * @Time : 2025-12-04 16:43
@@ -153,4 +156,19 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         }
         return sb.toString();
     }
+
+    /**
+     * 是否为http(s)://开头
+     *
+     * @param link 链接
+     * @return 结果
+     */
+    public static boolean isHttp(String link)
+    {
+        // CS: 不忽略大小写
+        return Strings.CS.startsWithAny(link, Constants.HTTP, Constants.HTTPS);
+
+    }
+
+
 }

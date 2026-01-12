@@ -78,13 +78,22 @@ public class SecurityConfig {
     private LogoutSuccessHandlerImpl logoutSuccessHandler;
 
     /**
-     * 自定义身份验证管理器
+     * 身份验证管理器 - 手动配置方式
      */
-    @Bean
+    /*@Bean
     public AuthenticationManager authenticationManager() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
         provider.setPasswordEncoder(bCryptPasswordEncoder());
         return new ProviderManager(provider);
+    }*/
+
+    /**
+     * 身份验证管理器 - 自动配置方式
+     * Spring Security 推荐的标准方式
+     */
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
 
     /**
@@ -133,8 +142,9 @@ public class SecurityConfig {
             // 添加JWT token认证过滤器
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
             // 添加CORS filter
-            .addFilterBefore(corsFilter, JwtAuthenticationFilter.class);
-            //.addFilterBefore(corsFilter, LogoutFilter.class);
+            .addFilterBefore(corsFilter, JwtAuthenticationFilter.class)
+            .addFilterBefore(corsFilter, LogoutFilter.class)
+            .build();
 
 
         /*http.formLogin(formLogin -> {

@@ -1,6 +1,7 @@
 package com.zzq.system.service;
 
 
+import com.zzq.common.core.domain.AjaxResult;
 
 /**
  * @Project : zzq-demo-backend
@@ -10,4 +11,5 @@ package com.zzq.system.service;
  */
 public interface SysMenuService {
 
+    AjaxResult getRouters();
 }

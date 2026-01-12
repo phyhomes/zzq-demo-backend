@@ -30,8 +30,8 @@ public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint {
                          AuthenticationException authException)
             throws IOException {
         log.info("未认证访问: {}", authException.getMessage());
-
-        AjaxResult result = AjaxResult.error(HttpStatus.UNAUTHORIZED, "未授权访问");
+        String msg = String.format("请求访问：%s，认证失败，无法访问系统资源", request.getRequestURI());
+        AjaxResult result = AjaxResult.error(HttpStatus.UNAUTHORIZED, msg);
         ServletUtils.renderAjaxResult(response, result);
     }
 }

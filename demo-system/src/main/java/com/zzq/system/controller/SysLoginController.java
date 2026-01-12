@@ -3,6 +3,7 @@ package com.zzq.system.controller;
 import com.zzq.common.core.domain.AjaxResult;
 import com.zzq.system.domain.LoginQuery;
 import com.zzq.system.service.SysLoginService;
+import com.zzq.system.service.SysMenuService;
 import com.zzq.system.service.SysUserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,9 @@ public class SysLoginController {
     @Autowired
     private SysUserService sysUserService;
 
+    @Autowired
+    private SysMenuService sysMenuService;
+
     /**
      * 登录方法
      *
@@ -49,5 +53,14 @@ public class SysLoginController {
         return sysUserService.getUserInfo();
     }
 
+    /**
+     * 获取路由信息
+     *
+     * @return 路由信息
+     */
+    @GetMapping("getRouters")
+    public AjaxResult getRouters() {
+        return sysMenuService.getRouters();
+    }
 
 }

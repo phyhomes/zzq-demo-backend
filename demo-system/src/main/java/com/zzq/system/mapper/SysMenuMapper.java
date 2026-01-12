@@ -1,7 +1,10 @@
 package com.zzq.system.mapper;
 
 
+import com.zzq.system.domain.SysMenuTree;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
  * @Project : zzq-demo-backend
@@ -13,4 +16,7 @@ import org.apache.ibatis.annotations.Mapper;
 public interface SysMenuMapper {
 
 
+    List<SysMenuTree> selectAllMenus();
+
+    List<SysMenuTree> selectMenusByUserId(Long userId);
 }

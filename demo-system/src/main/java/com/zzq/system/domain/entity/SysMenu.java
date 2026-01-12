@@ -45,7 +45,7 @@ public class SysMenu extends BaseEntity {
     private String query;
 
     /**
-     * 路由名称
+     * 路由名称，默认和路由地址相同的驼峰格式（注意：因为vue3版本的router会删除名称相同路由，为避免名字的冲突，特殊情况可以自定义）
      */
     private String routeName;
 

@@ -1,6 +1,7 @@
 package com.zzq.common.core.domain;
 
 import com.zzq.common.constant.HttpStatus;
+import com.zzq.common.utils.MessageUtils;
 
 import java.io.Serial;
 import java.util.HashMap;
@@ -50,6 +51,9 @@ public class AjaxResult extends HashMap<String, Object> {
      */
     public AjaxResult(int code, String msg, Object data) {
         super.put(CODE_TAG, code);
+        if (msg != null) {
+            msg = MessageUtils.message(msg);
+        }
         super.put(MSG_TAG, msg);
         if (data != null)
         {
@@ -63,7 +67,7 @@ public class AjaxResult extends HashMap<String, Object> {
      * @return 成功消息
      */
     public static AjaxResult success() {
-        return AjaxResult.success("操作成功");
+        return AjaxResult.success("请求成功");
     }
 
     /**
@@ -72,7 +76,7 @@ public class AjaxResult extends HashMap<String, Object> {
      * @return 成功消息
      */
     public static AjaxResult success(Object data) {
-        return AjaxResult.success("操作成功", data);
+        return AjaxResult.success("请求成功", data);
     }
 
     /**

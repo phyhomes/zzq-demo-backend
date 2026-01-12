@@ -84,4 +84,14 @@ public class GlobalExceptionHandler {
         return AjaxResult.error(e.getCode(), e.getMessage());
     }
 
+    /**
+     * 运行时异常
+     */
+    @ExceptionHandler(RuntimeException.class)
+    public AjaxResult handleRuntimeException(RuntimeException e, HttpServletRequest request) {
+        String requestURI = request.getRequestURI();
+        log.error("请求地址'{}',发生系统异常.", requestURI, e);
+        return AjaxResult.error(HttpStatus.ERROR, e.getMessage());
+    }
+
 }
