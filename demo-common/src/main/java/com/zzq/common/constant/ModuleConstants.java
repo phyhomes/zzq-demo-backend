@@ -8,6 +8,10 @@ package com.zzq.common.constant;
  */
 public class ModuleConstants {
     /**
+     * 请求相关
+     */
+    public static final String QUERY = "query";
+    /**
      * 认证相关
      */
     public static final String AUTH = "auth";

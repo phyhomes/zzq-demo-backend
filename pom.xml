@@ -22,6 +22,7 @@
         <json.version>20250517</json.version>
         <mybatis.version>3.0.5</mybatis.version>
         <mockito.version>5.21.0</mockito.version>
+        <mapStruct.version>1.5.0</mapStruct.version>
     </properties>
 
     <parent>
@@ -110,11 +111,12 @@
                 <version>${pool.version}</version>
             </dependency>
 
-            <!-- 分页 -->
+            <!-- pageHelper 分页插件 -->
             <dependency>
                 <groupId>com.github.pagehelper</groupId>
                 <artifactId>pagehelper-spring-boot-starter</artifactId>
                 <version>${pageHelper.version}</version>
+                <scope>compile</scope>
             </dependency>
 
             <!-- io常用工具类 -->
@@ -170,7 +172,7 @@
                 <artifactId>kaptcha</artifactId>
                 <version>${kaptcha.version}</version>
             </dependency>
-            <!--  -->
+            <!-- 工具类 -->
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
@@ -205,12 +207,18 @@
                 <version>${json.version}</version>
             </dependency>
 
-
             <!-- 单元测试 -->
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
                 <version>${mockito.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>io.github.linpeilie</groupId>
+                <artifactId>mapstruct-plus-spring-boot-starter</artifactId>
+                <version>${mapStruct.version}</version>
+                <scope>compile</scope>
             </dependency>
 
 
@@ -231,6 +239,9 @@
                 <artifactId>framework</artifactId>
                 <version>${demo.version}</version>
             </dependency>
+
+
+
         </dependencies>
 
 
@@ -247,6 +258,13 @@
                     <source>${java.version}</source>
                     <target>${java.version}</target>
                     <encoding>${project.build.sourceEncoding}</encoding>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>io.github.linpeilie</groupId>
+                            <artifactId>mapstruct-plus-processor</artifactId>
+                            <version>${mapStruct.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
             </plugin>
             <plugin>

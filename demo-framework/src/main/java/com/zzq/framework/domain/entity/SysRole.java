@@ -106,7 +106,7 @@ public class SysRole extends BaseEntity {
     }
 
     @NotNull(message = "role.data.scope.not.null")
-    @Size(max = 4, message = "role.data.scope.size")
+    @Size(max = 5, message = "role.data.scope.size")
     public Integer getDataScope() {
         return dataScope;
     }

@@ -1,6 +1,7 @@
 package com.zzq.system.service.impl;
 
 import com.zzq.common.constant.CacheConstants;
+import com.zzq.common.core.domain.AjaxResult;
 import com.zzq.common.core.redis.RedisCache;
 import com.zzq.common.utils.StringUtils;
 import com.zzq.system.domain.entity.SysConfig;
@@ -95,6 +96,11 @@ public class SysConfigServiceImpl implements SysConfigService {
     @Override
     public boolean checkConfigKeyUnique(SysConfig config) {
         return false;
+    }
+
+    @Override
+    public AjaxResult listSysConfig(SysConfig sysConfig) {
+        return null;
     }
 
     private String getCacheKey(String configKey) {

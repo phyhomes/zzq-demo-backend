@@ -39,6 +39,9 @@ public class AjaxResult extends HashMap<String, Object> {
      */
     public AjaxResult(int code, String msg) {
         super.put(CODE_TAG, code);
+        if (msg != null) {
+            msg = MessageUtils.message(msg);
+        }
         super.put(MSG_TAG, msg);
     }
 

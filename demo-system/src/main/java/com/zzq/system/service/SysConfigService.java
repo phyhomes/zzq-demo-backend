@@ -1,5 +1,6 @@
 package com.zzq.system.service;
 
+import com.zzq.common.core.domain.AjaxResult;
 import com.zzq.system.domain.entity.SysConfig;
 
 import java.util.List;
@@ -87,4 +88,6 @@ public interface SysConfigService {
      * @return 结果
      */
     public boolean checkConfigKeyUnique(SysConfig config);
+
+    AjaxResult listSysConfig(SysConfig sysConfig);
 }

@@ -2,6 +2,9 @@ package com.zzq.common.utils;
 
 import com.zzq.common.constant.Constants;
 import org.apache.commons.lang3.Strings;
+import org.springframework.util.CollectionUtils;
+
+import java.util.Collection;
 
 /**
  * @Project : zzq-demo-backend
@@ -10,7 +13,7 @@ import org.apache.commons.lang3.Strings;
  * @Desc : 字符串工具类
  */
 public class StringUtils extends org.apache.commons.lang3.StringUtils {
-
+    private static final String SEPARATOR = ",";
     /**
      * * 判断一个对象是否为空
      *
@@ -74,7 +77,7 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         return !isBlank(str);
     }
     /**
-     * 去空格
+     * 去空格 null安全的
      */
     public static String trim(String str)
     {
@@ -170,5 +173,71 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
 
     }
 
+    /**
+     * 判断给定的collection列表中是否包含数组array 判断给定的数组array中是否包含给定的元素value
+     *
+     * @param collection 给定的集合
+     * @param array 给定的数组
+     * @return boolean 结果
+     */
+    public static boolean containsAny(Collection<String> collection, String... array)
+    {
+        if (!CollectionUtils.isEmpty(collection) && !isEmpty(array)) {
+            for (String str : array) {
+                if (collection.contains(str)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
+    /**
+     * 驼峰转下划线命名
+     */
+    public static String toUnderScoreCase(String str)
+    {
+        if (str == null)
+        {
+            return null;
+        }
+        StringBuilder sb = new StringBuilder();
+        // 前置字符是否大写
+        boolean preCharIsUpperCase = true;
+        // 当前字符是否大写
+        boolean curreCharIsUpperCase = true;
+        // 下一字符是否大写
+        boolean nexteCharIsUpperCase = true;
+        for (int i = 0; i < str.length(); i++)
+        {
+            char c = str.charAt(i);
+            if (i > 0)
+            {
+                preCharIsUpperCase = Character.isUpperCase(str.charAt(i - 1));
+            }
+            else
+            {
+                preCharIsUpperCase = false;
+            }
+
+            curreCharIsUpperCase = Character.isUpperCase(c);
+
+            if (i < (str.length() - 1))
+            {
+                nexteCharIsUpperCase = Character.isUpperCase(str.charAt(i + 1));
+            }
+
+            if (preCharIsUpperCase && curreCharIsUpperCase && !nexteCharIsUpperCase)
+            {
+                sb.append(SEPARATOR);
+            }
+            else if ((i != 0 && !preCharIsUpperCase) && curreCharIsUpperCase)
+            {
+                sb.append(SEPARATOR);
+            }
+            sb.append(Character.toLowerCase(c));
+        }
+
+        return sb.toString();
+    }
 }

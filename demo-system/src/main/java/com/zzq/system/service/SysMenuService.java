@@ -11,5 +11,10 @@ import com.zzq.common.core.domain.AjaxResult;
  */
 public interface SysMenuService {
 
+    /**
+     * 获取路由信息
+     *
+     * @return 路由信息
+     */
     AjaxResult getRouters();
 }

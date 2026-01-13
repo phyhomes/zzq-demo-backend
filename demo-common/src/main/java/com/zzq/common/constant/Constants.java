@@ -88,14 +88,19 @@ public class Constants {
     public static final Integer NORMAL = 1;
 
     /**
+     * 禁用状态标识
+     */
+    public static final Integer DISABLE = 0;
+
+    /**
      * 角色权限分隔符
      */
-    public static final String ROLE_DELIMETER = ",";
+    public static final String ROLE_DELIMITER = ",";
 
     /**
      * 权限标识分隔符
      */
-    public static final String PERMISSION_DELIMETER = ",";
+    public static final String PERMISSION_DELIMITER = ",";
 
     /**
      * 验证码有效期（分钟）

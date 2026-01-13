@@ -34,6 +34,12 @@
             <artifactId>framework</artifactId>
         </dependency>
 
+        <!-- MapStruct 对象转换依赖 -->
+        <dependency>
+            <groupId>io.github.linpeilie</groupId>
+            <artifactId>mapstruct-plus-spring-boot-starter</artifactId>
+            <scope>compile</scope>
+        </dependency>
 
 
         <dependency>

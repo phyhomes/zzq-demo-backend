@@ -358,9 +358,9 @@ public class ConvertUtils {
 
     /**
      * 转换为String数组<br>
-     *
+     * 分隔符是逗号','<br>
      * @param str 被转换的值
-     * @return 结果
+     * @return 字符串数组
      */
     public static String[] toStrArray(String str)
     {

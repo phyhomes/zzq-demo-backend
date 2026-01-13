@@ -110,6 +110,15 @@ mybatis:
   # 加载全局的配置文件
   config-location: classpath:mybatis-config.xml
 
+# PageHelper分页插件
+pagehelper:
+  # 指定数据库方言
+  helperDialect: mysql
+  # 是否支持通过 Mapper 接口方法的参数来传递分页参数
+  supportMethodsArguments: true
+  # 定义分页参数的映射关系
+  params: count=countSql
+
 # token配置
 token:
   # 令牌自定义标识
