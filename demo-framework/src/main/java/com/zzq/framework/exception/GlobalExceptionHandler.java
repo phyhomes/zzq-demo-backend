@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -32,7 +33,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MissingPathVariableException.class)
     public AjaxResult handleMissingPathVariableException(MissingPathVariableException e, HttpServletRequest request) {
         String requestURI = request.getRequestURI();
-        log.warn("请求路径中缺少必需的路径变量'{}',发生系统异常.", requestURI, e);
+        log.warn("请求路径中缺少必需的路径变量'{}'，异常信息：'{}'。", requestURI, e.getMessage());
         return AjaxResult.error(HttpStatus.PARA_ERROR, String.format("请求路径中缺少必需的路径变量[%s]", e.getVariableName()));
     }
 
@@ -47,7 +48,7 @@ public class GlobalExceptionHandler {
         {
             value = EscapeUtils.clean(value);
         }
-        log.warn("请求参数类型不匹配'{}',发生系统异常.", requestURI, e);
+        log.warn("请求参数类型不匹配'{}'，异常信息：'{}'。", requestURI, e.getMessage());
         return AjaxResult.error(String.format("请求参数类型不匹配，参数[%s]要求类型为：'%s'，但输入值为：'%s'", e.getName(), e.getRequiredType().getName(), value));
     }
 
@@ -57,7 +58,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public AjaxResult handleMethodArgumentNotValidException(MethodArgumentNotValidException e, HttpServletRequest request) {
         String requestURI = request.getRequestURI();
-        log.warn("参数验证失败'{}',发生系统异常.", requestURI, e);
+        log.warn("请求参数验证失败'{}'，异常信息：'{}'。", requestURI, e.getMessage());
         String message = e.getBindingResult().getFieldError().getDefaultMessage();
 
         return AjaxResult.error(HttpStatus.PARA_ERROR, message);
@@ -69,9 +70,20 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ConstraintViolationException.class)
     public AjaxResult handleConstraintViolationException(ConstraintViolationException e, HttpServletRequest request) {
         String requestURI = request.getRequestURI();
-        log.warn("参数验证失败'{}',发生系统异常.", requestURI, e);
+        log.warn("参数验证失败'{}'，异常信息：'{}'。", requestURI, e.getMessage());
         String message = e.getConstraintViolations().iterator().next().getMessage();
         return AjaxResult.error(HttpStatus.PARA_ERROR, message);
+    }
+
+    /**
+     * 权限校验异常
+     */
+    @ExceptionHandler(AccessDeniedException.class)
+    public AjaxResult handleAccessDeniedException(AccessDeniedException e, HttpServletRequest request)
+    {
+        String requestURI = request.getRequestURI();
+        log.warn("请求地址'{}'，权限校验失败。异常信息：'{}'", requestURI, e.getMessage());
+        return AjaxResult.error(HttpStatus.FORBIDDEN, "permission.denied");
     }
 
     /**
@@ -90,7 +102,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     public AjaxResult handleRuntimeException(RuntimeException e, HttpServletRequest request) {
         String requestURI = request.getRequestURI();
-        log.error("请求地址'{}',发生系统异常.", requestURI, e);
+        log.error("请求地址'{}'，发生系统异常，信息：", requestURI, e);
         return AjaxResult.error(HttpStatus.ERROR, e.getMessage());
     }
 

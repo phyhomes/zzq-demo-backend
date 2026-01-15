@@ -86,9 +86,5 @@ public class PageQuery {
         this.reasonable = reasonable;
     }
 
-    public boolean pageSizeValid() {
-        List<Integer> validPageSize = Stream.of(10, 20, 50).toList();
-        return validPageSize.contains(pageSize);
-    }
 
 }

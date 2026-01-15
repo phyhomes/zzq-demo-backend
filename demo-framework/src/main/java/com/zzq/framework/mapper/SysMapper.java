@@ -28,4 +28,6 @@ public interface SysMapper {
     Set<String> selectPermsByUserId(Long userId);
 
     void insertLoginInfo(SysLoginInfo sysLoginInfo);
+
+    SysRoleDTO selectRoleByRoleId(Long roleId);
 }

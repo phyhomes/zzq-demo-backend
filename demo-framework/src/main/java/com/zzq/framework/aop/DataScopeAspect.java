@@ -77,6 +77,7 @@ public class DataScopeAspect
             if (currentUser != null && !currentUser.isAdmin())
             {
                 // 这里的 permission 来自 @PreAuthorize 注解
+                // 要嘛从Controller层的注解中获取，要嘛从权限上下文管理工具中获取
                 String permission = StringUtils.defaultIfEmpty(controllerDataScope.permission(), PermissionContextHolder.getContext());
                 dataScopeFilter(joinPoint, loginUser, controllerDataScope.deptAlias(), controllerDataScope.userAlias(), permission);
             }

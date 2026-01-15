@@ -1,7 +1,7 @@
 package com.zzq.system.domain.entity;
 
 import com.zzq.common.core.domain.BaseEntity;
-
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 
 /**
@@ -298,22 +298,23 @@ public class SysMenu extends BaseEntity {
 
     @Override
     public String toString() {
-        return "SysMenu{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", parentId=" + parentId +
-                ", seq=" + seq +
-                ", path='" + path + '\'' +
-                ", component='" + component + '\'' +
-                ", query='" + query + '\'' +
-                ", routeName='" + routeName + '\'' +
-                ", frameFlag=" + frameFlag +
-                ", cacheFlag=" + cacheFlag +
-                ", type='" + type + '\'' +
-                ", visible=" + visible +
-                ", status=" + status +
-                ", perms='" + perms + '\'' +
-                ", icon='" + icon + '\'' +
-                '}';
+        return new ToStringBuilder(this)
+                .append("id", id)
+                .append("name", name)
+                .append("parentId", parentId)
+                .append("seq", seq)
+                .append("path", path)
+                .append("component", component)
+                .append("query", query)
+                .append("routeName", routeName)
+                .append("frameFlag", frameFlag)
+                .append("cacheFlag", cacheFlag)
+                .append("type", type)
+                .append("visible", visible)
+                .append("status", status)
+                .append("perms", perms)
+                .append("icon", icon)
+                .append("remark", super.getRemark())
+                .toString();
     }
 }

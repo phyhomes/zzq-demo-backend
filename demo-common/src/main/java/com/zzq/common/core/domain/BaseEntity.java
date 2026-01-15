@@ -2,6 +2,7 @@ package com.zzq.common.core.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -120,4 +121,16 @@ public class BaseEntity implements Serializable {
         this.params = params;
     }
 
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("searchValue", searchValue)
+                .append("createBy", createBy)
+                .append("createTime", createTime)
+                .append("updateBy", updateBy)
+                .append("updateTime", updateTime)
+                .append("remark", remark)
+                .append("params", params)
+                .toString();
+    }
 }

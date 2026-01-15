@@ -1,9 +1,14 @@
 package com.zzq.system.service.impl;
 
 import com.zzq.common.constant.CacheConstants;
+import com.zzq.common.constant.HttpStatus;
 import com.zzq.common.core.domain.AjaxResult;
+import com.zzq.common.core.domain.PageData;
+import com.zzq.common.core.domain.PageDataBack;
 import com.zzq.common.core.redis.RedisCache;
+import com.zzq.common.utils.PageUtils;
 import com.zzq.common.utils.StringUtils;
+import com.zzq.system.domain.SysConfigVO;
 import com.zzq.system.domain.entity.SysConfig;
 import com.zzq.system.mapper.SysConfigMapper;
 import com.zzq.system.service.SysConfigService;
@@ -45,8 +50,8 @@ public class SysConfigServiceImpl implements SysConfigService {
         // Redis中没有，从数据库中查询
         SysConfig config = sysConfigMapper.selectConfigByIdOrKey(null, configKey);
         if (config != null) {
-            redisCache.setCacheObject(getCacheKey(configKey), config.getValue());
-            return config.getValue();
+            redisCache.setCacheObject(getCacheKey(configKey), config.getConfigValue());
+            return config.getConfigValue();
         }
 
         // 都没有，返回空
@@ -100,7 +105,11 @@ public class SysConfigServiceImpl implements SysConfigService {
 
     @Override
     public AjaxResult listSysConfig(SysConfig sysConfig) {
-        return null;
+        PageUtils.checkPageSize();
+        PageUtils.startPage();
+        List<SysConfigVO> sysConfigVOs = sysConfigMapper.listSysConfig(sysConfig);
+
+        return PageUtils.getAjaxResult(sysConfigVOs);
     }
 
     private String getCacheKey(String configKey) {

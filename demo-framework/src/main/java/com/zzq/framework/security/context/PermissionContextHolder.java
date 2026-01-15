@@ -5,7 +5,8 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 
 /**
- * 权限信息
+ * 权限信息上下文管理工具
+ * 实现在代码中的不同地方便捷获取当前请求的权限信息
  * 
  * @author ruoyi
  */

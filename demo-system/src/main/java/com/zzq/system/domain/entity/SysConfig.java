@@ -1,6 +1,8 @@
 package com.zzq.system.domain.entity;
 
 import com.zzq.common.core.domain.BaseEntity;
+import com.zzq.system.domain.SysConfigVO;
+import io.github.linpeilie.annotations.AutoMapper;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
@@ -12,6 +14,7 @@ import java.io.Serial;
  * @Author : ZZQ
  * @Desc : 参数配置表 sys_config
  */
+@AutoMapper(target = SysConfigVO.class)
 public class SysConfig extends BaseEntity {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -23,10 +26,10 @@ public class SysConfig extends BaseEntity {
     private String name;
 
     /** 参数键名 */
-    private String key;
+    private String configKey;
 
     /** 参数键值 */
-    private String value;
+    private String configValue;
 
     /** 系统内置（Y是 N否） */
     private String type;
@@ -47,20 +50,20 @@ public class SysConfig extends BaseEntity {
         this.name = name;
     }
 
-    public String getKey() {
-        return key;
+    public String getConfigKey() {
+        return configKey;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setConfigKey(String configKey) {
+        this.configKey = configKey;
     }
 
-    public String getValue() {
-        return value;
+    public String getConfigValue() {
+        return configValue;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setConfigValue(String configValue) {
+        this.configValue = configValue;
     }
 
     public String getType() {
@@ -76,8 +79,8 @@ public class SysConfig extends BaseEntity {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("configId", getId())
                 .append("configName", getName())
-                .append("configKey", getKey())
-                .append("configValue", getValue())
+                .append("configKey", getConfigKey())
+                .append("configValue", getConfigValue())
                 .append("configType", getType())
                 .append("createBy", getCreateBy())
                 .append("createTime", getCreateTime())

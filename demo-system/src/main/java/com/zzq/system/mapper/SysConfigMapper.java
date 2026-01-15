@@ -1,7 +1,10 @@
 package com.zzq.system.mapper;
 
+import com.zzq.system.domain.SysConfigVO;
 import com.zzq.system.domain.entity.SysConfig;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
  * @Project : zzq-demo-backend
@@ -11,5 +14,7 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface SysConfigMapper {
-    SysConfig selectConfigByIdOrKey(Integer id, String key);
+    SysConfig selectConfigByIdOrKey(Integer id, String configKey);
+
+    List<SysConfigVO> listSysConfig(SysConfig sysConfig);
 }

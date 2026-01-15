@@ -3,6 +3,7 @@ package com.zzq.framework.service.impl;
 import com.zzq.common.constant.CacheConstants;
 import com.zzq.common.constant.Constants;
 import com.zzq.common.core.redis.RedisCache;
+import com.zzq.framework.mapper.SysMapper;
 import com.zzq.framework.utils.SecurityUtils;
 import com.zzq.framework.security.context.AuthenticationContextHolder;
 import com.zzq.framework.service.SysService;
@@ -21,10 +22,11 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 
@@ -48,6 +50,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
     private SysService sysService;
+
+    @Autowired
+    private SysMapper sysMapper;
 
     @Value(value = "${user.maxLoginFailCount}")
     private int maxLoginFailCount;
@@ -87,22 +92,38 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     public UserDetails createLoginUser(SysUser user)
     {
+        Set<String> permissions = new HashSet<>();
+        List<SysRoleDTO> roles = new ArrayList<>();
         // 根据用户的deptId查询部门信息
         // SysDept dept = sysDeptService.selectDeptById(user.getDeptId());
         SysDept dept = sysService.selectDeptById(user.getDeptId());
 
+        // 判断用户是不是Admin
+        if (user.isAdmin()) {
+            roles.add(sysMapper.selectRoleByRoleId(1L));
+            permissions.add(Constants.ALL_PERMISSION);
+            return new LoginUserDTO(user, dept, roles, permissions);
+        }
+
         // 根据用户的id查询角色列表
         // List<SysRoleDTO> roles = sysRoleService.selectRolesByUserId(user.getId());
-        List<SysRoleDTO> roles = sysService.selectRolesByUserId(user.getId());
-        Set<String> permissions = getUserPermissions(roles);
-        if (CollectionUtils.isEmpty(permissions)) {
-            // 判断是不是该用户是不是Admin
-            if (user.isAdmin()) {
-                permissions.add("*:*:*");
-            } else {
-                // 根据用户id获取用户权限
-                permissions = sysService.selectPermsByUserId(user.getId());
+        roles.addAll(sysService.selectRolesByUserId(user.getId()));
+        // 判断roles是不是空的
+        if (CollectionUtils.isEmpty(roles)) {
+            return new LoginUserDTO(user, dept, roles, permissions);
+        }
+        // 判断roles中有没有1号角色
+        for (SysRoleDTO role: roles ) {
+            if (role.isAdmin()) {
+                permissions.add(Constants.ALL_PERMISSION);
+                return new LoginUserDTO(user, dept, roles, permissions);
             }
+        }
+
+        permissions.addAll(getUserPermissions(roles));
+        if (CollectionUtils.isEmpty(permissions)) {
+            // 根据用户id获取用户权限
+            permissions = sysService.selectPermsByUserId(user.getId());
         }
         return new LoginUserDTO(user, dept, roles, permissions);
     }

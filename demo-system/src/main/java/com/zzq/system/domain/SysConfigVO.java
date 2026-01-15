@@ -1,6 +1,7 @@
 package com.zzq.system.domain;
 
 import com.zzq.system.domain.entity.SysConfig;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -22,13 +23,65 @@ public class SysConfigVO implements Serializable {
     private String name;
 
     /** 参数键名 */
-    private String key;
+    private String configKey;
 
     /** 参数键值 */
-    private String value;
+    private String configValue;
 
     /** 备注 */
     private String remark;
 
+    public SysConfigVO() {
+    }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getConfigKey() {
+        return configKey;
+    }
+
+    public void setConfigKey(String configKey) {
+        this.configKey = configKey;
+    }
+
+    public String getConfigValue() {
+        return configValue;
+    }
+
+    public void setConfigValue(String configValue) {
+        this.configValue = configValue;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("id", id)
+                .append("name", name)
+                .append("configKey", configKey)
+                .append("configValue", configValue)
+                .append("remark", remark)
+                .toString();
+    }
 }

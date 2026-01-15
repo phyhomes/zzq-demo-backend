@@ -14,6 +14,7 @@ import java.util.Collection;
  */
 public class StringUtils extends org.apache.commons.lang3.StringUtils {
     private static final String SEPARATOR = ",";
+    public static final String STAR = "*";
     /**
      * * 判断一个对象是否为空
      *
@@ -239,5 +240,30 @@ public class StringUtils extends org.apache.commons.lang3.StringUtils {
         }
 
         return sb.toString();
+    }
+
+
+    /**
+     * 将字符串中间部分替换为星号（*）
+     * 例如: mask("551234567868", 2, 2) → "55********68"
+     *
+     * @param str       原字符串
+     * @param headLen   保留头部长度
+     * @param tailLen   保留尾部长度
+     * @return 掩码后的字符串
+     */
+    public static String mask(String str, int headLen, int tailLen) {
+        if (StringUtils.isBlank(str)) {
+            return str;
+        }
+        int len = str.length();
+        if (headLen + tailLen >= len) {
+            // 如果保留长度超过总长度，返回全星号或原串（按需调整）
+            return StringUtils.repeat(STAR, len);
+        }
+        String head = StringUtils.left(str, headLen);
+        String tail = StringUtils.right(str, tailLen);
+        String middle = StringUtils.repeat(STAR, len - headLen - tailLen);
+        return head + middle + tail;
     }
 }

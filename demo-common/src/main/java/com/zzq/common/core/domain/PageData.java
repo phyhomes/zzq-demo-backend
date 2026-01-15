@@ -1,45 +1,34 @@
 package com.zzq.common.core.domain;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 import java.io.Serial;
-import java.util.HashMap;
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * @Project : zzq-demo-backend
- * @Time : 2026-01-13 11:39
+ * @Time : 2026-01-14 12:28
  * @Author : ZZQ
- * @Desc : 统一分页数据
+ * @Desc : 统一分页数据结构
  */
-public class PageData<E> extends HashMap<String, Object> {
+public class PageData<E> implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
     /** 数量 */
-    public static final String TOTAL = "total";
+    private Long total;
 
     /** 页码 */
-    public static final String PAGE_NUM = "pageNum";
+    private Integer pageSize;
 
     /** 每页数据大小 */
-    public static final String PAGE_SIZE = "pageSize";
+    private Integer pageNum;
 
     /** 记录 */
-    public static final String RECORDS = "records";
-
-    private Long total;
-    private Integer pageNum;
-    private Integer pageSize;
     private List<E> records;
 
-    public PageData(){
-
-    }
-
-    public PageData(Long total, Integer pageNum, Integer pageSize, List<E> records){
-        super.put(TOTAL, total);
-        super.put(PAGE_NUM, pageNum);
-        super.put(PAGE_SIZE, pageSize);
-        super.put(RECORDS, records);
+    public PageData() {
     }
 
     public Long getTotal() {
@@ -50,20 +39,20 @@ public class PageData<E> extends HashMap<String, Object> {
         this.total = total;
     }
 
-    public Integer getPageNum() {
-        return pageNum;
-    }
-
-    public void setPageNum(Integer pageNum) {
-        this.pageNum = pageNum;
-    }
-
     public Integer getPageSize() {
         return pageSize;
     }
 
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
+    }
+
+    public Integer getPageNum() {
+        return pageNum;
+    }
+
+    public void setPageNum(Integer pageNum) {
+        this.pageNum = pageNum;
     }
 
     public List<E> getRecords() {
@@ -74,16 +63,13 @@ public class PageData<E> extends HashMap<String, Object> {
         this.records = records;
     }
 
-    /**
-     * 方便链式调用
-     *
-     * @param key 键
-     * @param value 值
-     * @return 数据对象
-     */
     @Override
-    public PageData<E> put(String key, Object value) {
-        super.put(key, value);
-        return this;
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("total", getTotal())
+                .append("pageSize", getPageSize())
+                .append("pageNum", getPageNum())
+                .append("records", getRecords())
+                .toString();
     }
 }

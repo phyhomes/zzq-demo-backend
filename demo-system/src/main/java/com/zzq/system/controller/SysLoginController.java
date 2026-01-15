@@ -5,6 +5,7 @@ import com.zzq.system.domain.LoginQuery;
 import com.zzq.system.service.SysLoginService;
 import com.zzq.system.service.SysMenuService;
 import com.zzq.system.service.SysUserService;
+import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,7 @@ public class SysLoginController {
      * @return 结果
      */
     @PostMapping("/login")
-    public AjaxResult login(@RequestBody LoginQuery loginQuery) {
+    public AjaxResult login(@Valid @RequestBody LoginQuery loginQuery) {
         log.info("用户登录，登录信息：{}", loginQuery);
         return sysLoginService.login(loginQuery);
     }

@@ -1,7 +1,10 @@
 package com.zzq.system.domain;
 
 import com.zzq.system.domain.entity.SysConfig;
-import io.github.linpeilie.annotations.AutoMapper;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * @Project : zzq-demo-backend
@@ -9,16 +12,16 @@ import io.github.linpeilie.annotations.AutoMapper;
  * @Author : ZZQ
  * @Desc : {@link SysConfig} 的请求参数对象
  */
-@AutoMapper(target = SysConfig.class)
+
 public class SysConfigQuery {
     /** 参数名称 */
     private String name;
 
     /** 参数键名 */
-    private String key;
+    private String configKey;
 
     /** 参数键值 */
-    private String value;
+    private String configValue;
 
     public SysConfigQuery() {
     }
@@ -31,19 +34,28 @@ public class SysConfigQuery {
         this.name = name;
     }
 
-    public String getKey() {
-        return key;
+    public String getConfigKey() {
+        return configKey;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setConfigKey(String configKey) {
+        this.configKey = configKey;
     }
 
-    public String getValue() {
-        return value;
+    public String getConfigValue() {
+        return configValue;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setConfigValue(String configValue) {
+        this.configValue = configValue;
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this)
+                .append("name", name)
+                .append("configKey", configKey)
+                .append("configValue", configValue)
+                .toString();
     }
 }

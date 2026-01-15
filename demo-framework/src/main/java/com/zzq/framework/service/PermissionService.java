@@ -16,6 +16,7 @@ import java.util.Set;
  * 
  * @author ruoyi
  */
+// 指定了 Bean 的名称为 "ss"
 @Service("ss")
 public class PermissionService {
     /**
@@ -104,7 +105,7 @@ public class PermissionService {
      *
      * @param role 角色键值 roleKey
      * @param loginUser 登录用户对象
-     * @return
+     * @return 用户是否含有对应角色
      */
     private boolean hasRole(String role, LoginUserDTO loginUser){
 

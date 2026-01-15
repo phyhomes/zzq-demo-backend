@@ -113,7 +113,6 @@ public class SysLoginServiceImpl implements SysLoginService {
      * @param username 用户名
      * @param code 验证码
      * @param uuid 唯一标识
-     * @return 无
      */
     public void validateCaptcha(String username, String code, String uuid) {
         // 从配置信息中获取验证码开关，默认开启

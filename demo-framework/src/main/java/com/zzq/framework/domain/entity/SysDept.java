@@ -128,6 +128,7 @@ public class SysDept extends BaseEntity {
             .append("seqGlobal", getSeqGlobal())
             .append("status", getStatus())
             .append("delFlag", getDelFlag())
+            .append("remark", getRemark())
             .append("createBy", getCreateBy())
             .append("createTime", getCreateTime())
             .append("updateBy", getUpdateBy())

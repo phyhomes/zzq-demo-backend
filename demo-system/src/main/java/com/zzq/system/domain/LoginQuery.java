@@ -1,9 +1,14 @@
 package com.zzq.system.domain;
 
+import com.zzq.system.annotation.CaptchaRequired;
 import com.zzq.common.annotation.Xss;
+import com.zzq.common.utils.StringUtils;
 import com.zzq.system.config.LoginConfig;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import java.util.Random;
 
 /**
  * @Project : zzq-demo-backend
@@ -35,13 +40,13 @@ public class LoginQuery {
     /**
      * 验证码
      */
-    @NotBlank(message = "user.code.not.blank")
+    @CaptchaRequired(message = "user.code.not.blank")
     private String code;
 
     /**
      * 验证码的唯一标识
      */
-    @NotBlank(message = "user.uuid.not.blank")
+    @CaptchaRequired(message = "user.code.not.blank")
     private String uuid;
 
     public String getUsername()
@@ -57,6 +62,15 @@ public class LoginQuery {
     public String getPassword()
     {
         return password;
+    }
+
+    public String getMaskedPassword() {
+        Random random = new Random();
+        int repeatLeft = random.nextInt(10) + 1;
+        int repeatRight = random.nextInt(10) + 1;
+        return StringUtils.repeat(StringUtils.STAR, repeatLeft)
+                + StringUtils.mask(password, 0, 0)
+                + StringUtils.repeat(StringUtils.STAR, repeatRight);
     }
 
     public void setPassword(String password)
@@ -86,11 +100,11 @@ public class LoginQuery {
 
     @Override
     public String toString() {
-        return "LoginQuery{" +
-                "username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", code='" + code + '\'' +
-                ", uuid='" + uuid + '\'' +
-                '}';
+        return new ToStringBuilder(this)
+                .append("username", username)
+                .append("password", getMaskedPassword())
+                .append("code", code)
+                .append("uuid", uuid)
+                .toString();
     }
 }

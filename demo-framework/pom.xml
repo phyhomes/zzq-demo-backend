@@ -6,6 +6,7 @@
         <groupId>com.zzq</groupId>
         <artifactId>backend-demo</artifactId>
         <version>1.0.0</version>
+        <relativePath/>
     </parent>
     <artifactId>framework</artifactId>
     <name>demo-framework</name>
