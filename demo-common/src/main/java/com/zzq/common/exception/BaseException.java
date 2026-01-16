@@ -2,7 +2,7 @@ package com.zzq.common.exception;
 
 import com.zzq.common.constant.HttpStatus;
 import com.zzq.common.utils.MessageUtils;
-import com.zzq.common.utils.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serial;
 

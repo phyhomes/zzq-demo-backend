@@ -1,11 +1,11 @@
 package com.zzq.framework.service;
 
 import com.zzq.common.constant.Constants;
-import com.zzq.common.utils.StringUtils;
 import com.zzq.framework.utils.SecurityUtils;
 import com.zzq.framework.domain.dto.LoginUserDTO;
 import com.zzq.framework.domain.dto.SysRoleDTO;
 import com.zzq.framework.security.context.PermissionContextHolder;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -30,7 +30,7 @@ public class PermissionService {
             return false;
         }
         LoginUserDTO loginUser = SecurityUtils.getLoginUser();
-        if (loginUser == null || CollectionUtils.isEmpty(loginUser.getPermissions())) {
+        if (CollectionUtils.isEmpty(loginUser.getPermissions())) {
             return false;
         }
         // 保存到上下文中
@@ -60,7 +60,7 @@ public class PermissionService {
             return false;
         }
         LoginUserDTO loginUser = SecurityUtils.getLoginUser();
-        if (loginUser == null || CollectionUtils.isEmpty(loginUser.getPermissions())) {
+        if (CollectionUtils.isEmpty(loginUser.getPermissions())) {
             return false;
         }
         PermissionContextHolder.setContext(permissions);
@@ -84,7 +84,7 @@ public class PermissionService {
     private boolean hasPermissions(Set<String> permissions, String permission)
     {
         return permissions.contains(Constants.ALL_PERMISSION)
-                || permissions.contains(StringUtils.trim(permission));
+                || permissions.contains(StringUtils.strip(permission));
     }
 
     /**
@@ -114,7 +114,7 @@ public class PermissionService {
         }
         for (SysRoleDTO sysRole : loginUser.getRoles()) {
             String roleKey = sysRole.getRoleKey();
-            if (sysRole.isAdmin() || roleKey.equals(StringUtils.trim(role))) {
+            if (sysRole.isAdmin() || roleKey.equals(StringUtils.strip(role))) {
                 return true;
             }
         }
@@ -144,7 +144,7 @@ public class PermissionService {
             return false;
         }
         LoginUserDTO loginUser = SecurityUtils.getLoginUser();
-        if (loginUser == null || CollectionUtils.isEmpty(loginUser.getRoles())) {
+        if (CollectionUtils.isEmpty(loginUser.getRoles())) {
             return false;
         }
         for (String role : roles.split(Constants.ROLE_DELIMITER)) {

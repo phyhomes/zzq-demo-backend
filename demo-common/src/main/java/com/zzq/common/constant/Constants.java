@@ -93,6 +93,11 @@ public class Constants {
     public static final Integer DISABLE = 0;
 
     /**
+     * 删除标识（表示被删除了）
+     */
+    public static final Integer DELETED = 1;
+
+    /**
      * 角色权限分隔符
      */
     public static final String ROLE_DELIMITER = ",";

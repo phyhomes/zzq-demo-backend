@@ -2,9 +2,12 @@ package com.zzq.common.core.domain;
 
 import com.zzq.common.constant.HttpStatus;
 import com.zzq.common.utils.MessageUtils;
+import org.springframework.util.CollectionUtils;
 
 import java.io.Serial;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * @Project : zzq-demo-backend
@@ -142,6 +145,24 @@ public class AjaxResult extends HashMap<String, Object> {
      */
     public static AjaxResult error(int code, String msg) {
         return new AjaxResult(code, msg, null);
+    }
+
+    /**
+     * 封装列表数据
+     * 根据有无数据返回不同的状态信息
+     *
+     * @param list 列表数据
+     * @return AjaxResult
+     */
+    public static AjaxResult wrapList(List<?> list) {
+        if (CollectionUtils.isEmpty(list)) {
+            return AjaxResult.error(HttpStatus.NOT_FOUND, "get.empty");
+        }
+        return AjaxResult.success(list);
+    }
+
+    public static AjaxResult toAjaxResult(int rows, String successMsg, String errorMsg) {
+        return rows > 0 ? AjaxResult.success(successMsg) : AjaxResult.error(errorMsg);
     }
 
 

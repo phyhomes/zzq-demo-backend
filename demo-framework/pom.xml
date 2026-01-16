@@ -6,7 +6,7 @@
         <groupId>com.zzq</groupId>
         <artifactId>backend-demo</artifactId>
         <version>1.0.0</version>
-        <relativePath/>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>framework</artifactId>
     <name>demo-framework</name>
@@ -59,6 +59,8 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
+
+
 
 
     </dependencies>

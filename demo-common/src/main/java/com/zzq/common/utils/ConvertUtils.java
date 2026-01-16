@@ -1,5 +1,7 @@
 package com.zzq.common.utils;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
@@ -362,10 +364,8 @@ public class ConvertUtils {
      * @param str 被转换的值
      * @return 字符串数组
      */
-    public static String[] toStrArray(String str)
-    {
-        if (StringUtils.isBlank(str))
-        {
+    public static String[] toStrArray(String str) {
+        if (StringUtils.isBlank(str)) {
             return new String[] {};
         }
         return toStrArray(",", str);
@@ -378,8 +378,7 @@ public class ConvertUtils {
      * @param split 被转换的值
      * @return 结果
      */
-    public static String[] toStrArray(String split, String str)
-    {
+    public static String[] toStrArray(String split, String str) {
         return str.split(split);
     }
 
@@ -392,8 +391,7 @@ public class ConvertUtils {
      * @param defaultValue 转换错误时的默认值
      * @return 结果
      */
-    public static Long toLong(Object value, Long defaultValue)
-    {
+    public static Long toLong(Object value, Long defaultValue) {
         if (value == null)
         {
             return defaultValue;

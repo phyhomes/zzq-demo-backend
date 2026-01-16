@@ -1,5 +1,6 @@
 package com.zzq.common.utils;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.BeansException;
@@ -142,10 +143,9 @@ public final class SpringUtils implements BeanFactoryPostProcessor, ApplicationC
      *
      * @return 当前的环境配置
      */
-    public static String getActiveProfile()
-    {
+    public static String getActiveProfile() {
         final String[] activeProfiles = getActiveProfiles();
-        return StringUtils.isNotEmpty(activeProfiles) ? activeProfiles[0] : null;
+        return StringUtils.isNotBlank(activeProfiles[0]) ? activeProfiles[0] : null;
     }
 
     /**

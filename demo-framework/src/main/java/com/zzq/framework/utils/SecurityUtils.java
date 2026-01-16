@@ -4,12 +4,12 @@ import com.zzq.common.constant.Constants;
 import com.zzq.common.constant.HttpStatus;
 import com.zzq.common.constant.ModuleConstants;
 import com.zzq.common.exception.BaseException;
-import com.zzq.common.utils.StringUtils;
 import com.zzq.framework.domain.dto.LoginUserDTO;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.util.PatternMatchUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collection;
 
@@ -69,14 +69,18 @@ public class SecurityUtils {
     }
 
     /**
-     * 获取登录用户
+     * 获取登录用户 保证不会返回Null
      * @return 登录用户对象
      **/
     public static LoginUserDTO getLoginUser()
     {
         try
         {
-            return (LoginUserDTO) getAuthentication().getPrincipal();
+            LoginUserDTO loginUserDTO = (LoginUserDTO) getAuthentication().getPrincipal();
+            if (loginUserDTO == null) {
+                throw new BaseException(ModuleConstants.AUTH, HttpStatus.UNAUTHORIZED, "获取登录对象异常：登录用户不存在");
+            }
+            return loginUserDTO;
         }
         catch (Exception e)
         {

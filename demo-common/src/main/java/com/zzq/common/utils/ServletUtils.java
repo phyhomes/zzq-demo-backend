@@ -1,12 +1,14 @@
 package com.zzq.common.utils;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zzq.common.core.domain.AjaxResult;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -26,6 +28,7 @@ import java.util.Map;
  * @Desc : 客户端工具类
  */
 public class ServletUtils {
+
     /**
      * 获取String参数
      */
@@ -141,8 +144,7 @@ public class ServletUtils {
     public static void renderAjaxResult(HttpServletResponse response, AjaxResult result) throws IOException {
         response.setStatus(HttpServletResponse.SC_OK);
         response.setContentType("application/json;charset=UTF-8");
-        ObjectMapper mapper = new ObjectMapper();
-        response.getWriter().write(mapper.writeValueAsString(result));
+        response.getWriter().write(JacksonUtils.toJson(result));
     }
 
     /**
@@ -165,13 +167,13 @@ public class ServletUtils {
         }
 
         String uri = request.getRequestURI();
-        if (StringUtils.inStringIgnoreCase(uri, ".json", ".xml"))
+        if (LocalStringUtils.inStringIgnoreCase(uri, ".json", ".xml"))
         {
             return true;
         }
 
         String ajax = request.getParameter("__ajax");
-        return StringUtils.inStringIgnoreCase(ajax, "json", "xml");
+        return LocalStringUtils.inStringIgnoreCase(ajax, "json", "xml");
     }
 
     /**

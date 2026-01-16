@@ -3,14 +3,15 @@ package com.zzq.framework.aop;
 import com.zzq.common.annotation.DataScope;
 import com.zzq.common.core.domain.BaseEntity;
 import com.zzq.common.constant.Constants;
-import com.zzq.common.utils.StringUtils;
 import com.zzq.common.utils.ConvertUtils;
+import com.zzq.common.utils.LocalStringUtils;
 import com.zzq.framework.domain.dto.LoginUserDTO;
 import com.zzq.framework.domain.dto.SysRoleDTO;
 import com.zzq.framework.domain.entity.SysUser;
 import com.zzq.framework.utils.SecurityUtils;
 import com.zzq.framework.security.context.PermissionContextHolder;
 
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
@@ -70,17 +71,13 @@ public class DataScopeAspect
     protected void handleDataScope(final JoinPoint joinPoint, DataScope controllerDataScope) {
         // 获取当前的用户
         LoginUserDTO loginUser = SecurityUtils.getLoginUser();
-        if (loginUser != null)
-        {
-            SysUser currentUser = loginUser.getUser();
-            // 如果是超级管理员，则不过滤数据
-            if (currentUser != null && !currentUser.isAdmin())
-            {
-                // 这里的 permission 来自 @PreAuthorize 注解
-                // 要嘛从Controller层的注解中获取，要嘛从权限上下文管理工具中获取
-                String permission = StringUtils.defaultIfEmpty(controllerDataScope.permission(), PermissionContextHolder.getContext());
-                dataScopeFilter(joinPoint, loginUser, controllerDataScope.deptAlias(), controllerDataScope.userAlias(), permission);
-            }
+        SysUser currentUser = loginUser.getUser();
+        // 如果是超级管理员，则不过滤数据
+        if (currentUser != null && !currentUser.isAdmin()) {
+            // 这里的 permission 来自 @PreAuthorize 注解
+            // 要嘛从Controller层的注解中获取，要嘛从权限上下文管理工具中获取
+            String permission = StringUtils.defaultIfEmpty(controllerDataScope.permission(), PermissionContextHolder.getContext());
+            dataScopeFilter(joinPoint, loginUser, controllerDataScope.deptAlias(), controllerDataScope.userAlias(), permission);
         }
     }
 
@@ -102,7 +99,7 @@ public class DataScopeAspect
             // 判断条件：自定权限+角色正常+有菜单权限 => 做角色的合并
             if (Objects.equals(role.getDataScope(), DATA_SCOPE_CUSTOM)
                     && Objects.equals(role.getStatus(), Constants.NORMAL)
-                    && (StringUtils.isEmpty(permission) || StringUtils.containsAny(role.getPermissions(), ConvertUtils.toStrArray(permission)))
+                    && (StringUtils.isBlank(permission) || LocalStringUtils.containsAny(role.getPermissions(), ConvertUtils.toStrArray(permission)))
             ) {
                 scopeCustomIds.add(ConvertUtils.toStr(role.getId()));
             }
@@ -119,7 +116,7 @@ public class DataScopeAspect
             }
             // 当该角色的权限的不包含当前权限时，不处理
             if (StringUtils.isNotBlank(permission)
-                    && !StringUtils.containsAny(role.getPermissions(), ConvertUtils.toStrArray(permission))) {
+                    && !LocalStringUtils.containsAny(role.getPermissions(), ConvertUtils.toStrArray(permission))) {
                 continue;
             }
             // 角色权限为全部数据权限
@@ -133,29 +130,30 @@ public class DataScopeAspect
             else if (DATA_SCOPE_CUSTOM.equals(dataScope)) {
                 if (scopeCustomIds.size() > 1) {
                     // 多个自定数据权限使用in查询，避免多次拼接。
-                    sqlString.append(String.format(" OR %s.dept_id IN ( SELECT dept_id FROM sys_role_dept WHERE role_id in (%s) ) ", deptAlias, String.join(",", scopeCustomIds)));
+                    sqlString.append(String.format(" OR %s.id IN ( SELECT dept_id FROM sys_role_dept WHERE role_id in (%s) ) ", deptAlias, String.join(",", scopeCustomIds)));
                 }
                 else {
                     // 单个自定义数据权限用=查询
-                    sqlString.append(String.format(" OR %s.dept_id IN ( SELECT dept_id FROM sys_role_dept WHERE role_id = %s ) ", deptAlias, role.getId()));
+                    sqlString.append(String.format(" OR %s.id IN ( SELECT dept_id FROM sys_role_dept WHERE role_id = %s ) ", deptAlias, role.getId()));
                 }
             }
             // 本部门数据
             else if (DATA_SCOPE_DEPT.equals(dataScope)) {
-                sqlString.append(String.format(" OR %s.dept_id = %s ", deptAlias, loginUser.getDeptId()));
+                sqlString.append(String.format(" OR %s.id = %s ", deptAlias, loginUser.getDeptId()));
             }
             // 本部门及子部门
             else if (DATA_SCOPE_DEPT_AND_CHILD.equals(dataScope)) {
-                sqlString.append(String.format(" OR %s.dept_id IN ( SELECT dept_id FROM sys_dept WHERE dept_id = %s or find_in_set( %s , ancestors ) )", deptAlias, loginUser.getDeptId(), loginUser.getDeptId()));
+                // sqlString.append(String.format(" OR %s.dept_id IN ( SELECT dept_id FROM sys_dept WHERE dept_id = %s or find_in_set( %s , ancestors ) )", deptAlias, loginUser.getDeptId(), loginUser.getDeptId()));
+                sqlString.append(String.format(" OR %s.level like '%s%%'", deptAlias, loginUser.getDept().getLevel()));
             }
             // 仅本人数据权限
             else if (DATA_SCOPE_SELF.equals(dataScope)) {
                 if (StringUtils.isNotBlank(userAlias)) {
-                    sqlString.append(String.format(" OR %s.user_id = %s ", userAlias, loginUser.getUserId()));
+                    sqlString.append(String.format(" OR %s.id = %s ", userAlias, loginUser.getUserId()));
                 }
                 else {
                     // 数据权限为仅本人且没有userAlias别名不查询任何数据
-                    sqlString.append(String.format(" OR %s.dept_id = 0 ", deptAlias));
+                    sqlString.append(String.format(" OR %s.id = 0 ", deptAlias));
                 }
             }
             conditions.add(dataScope);
@@ -163,13 +161,14 @@ public class DataScopeAspect
 
         // 角色都不包含传递过来的权限字符，这个时候sqlString也会为空，所以要限制一下，不查询任何数据
         if (CollectionUtils.isEmpty(conditions)) {
-            sqlString.append(String.format(" OR %s.dept_id = 0 ", deptAlias));
+            sqlString.append(String.format(" OR %s.id = 0 ", deptAlias));
         }
 
         if (StringUtils.isNotBlank(sqlString.toString())) {
             Object params = joinPoint.getArgs()[0];
             // 模式变量，在类型检查时直接提取对象的值
             if (params instanceof BaseEntity baseEntity) {
+                // 4的意思是去掉一个前面的 " OR "
                 baseEntity.getParams().put(DATA_SCOPE, " AND (" + sqlString.substring(4) + ")");
             }
         }

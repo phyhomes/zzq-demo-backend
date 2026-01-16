@@ -1,4 +1,4 @@
-package com.zzq.system.domain;
+package com.zzq.system.domain.vo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 

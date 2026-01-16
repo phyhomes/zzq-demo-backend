@@ -14,11 +14,10 @@ import com.zzq.common.core.domain.AjaxResult;
 import com.zzq.common.core.redis.RedisCache;
 import com.zzq.framework.manager.AsyncManager;
 import com.zzq.system.config.LoginConfig;
-import com.zzq.system.domain.LoginQuery;
+import com.zzq.system.domain.query.LoginQuery;
 import com.zzq.framework.domain.dto.LoginUserDTO;
 import com.zzq.system.service.SysConfigService;
 import com.zzq.system.service.SysLoginService;
-import com.zzq.common.utils.StringUtils;
 import com.zzq.system.service.SysUserService;
 import com.zzq.framework.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +26,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @Project : zzq-demo-backend
@@ -119,7 +119,7 @@ public class SysLoginServiceImpl implements SysLoginService {
         boolean captchaEnabled = sysConfigService.selectCaptchaEnabled();
         if (captchaEnabled) {
             // 拼接验证码的key，对传入的uuid进行防null处理，设置默认值
-            String verifyKey = CacheConstants.CAPTCHA_CODE_KEY + StringUtils.defaultString(uuid, "");
+            String verifyKey = CacheConstants.CAPTCHA_CODE_KEY + StringUtils.defaultIfBlank(uuid, "");
             // 从redis缓存中获取验证码
             String captcha = redisCache.getCacheObject(verifyKey, String.class);
             // 验证码不存在，记录日志，抛出验证码失效异常

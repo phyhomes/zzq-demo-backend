@@ -1,7 +1,7 @@
 package com.zzq.common.utils.ip;
 
 import com.zzq.common.utils.ServletUtils;
-import com.zzq.common.utils.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.net.InetAddress;
@@ -44,24 +44,24 @@ public class IpUtils {
             return "unknown";
         }
         String ip = request.getHeader("x-forwarded-for");
-        if (StringUtils.isEmpty(ip) || "unknown".equalsIgnoreCase(ip))
+        if (StringUtils.isBlank(ip) || "unknown".equalsIgnoreCase(ip))
         {
             ip = request.getHeader("Proxy-Client-IP");
         }
-        if (StringUtils.isEmpty(ip) || "unknown".equalsIgnoreCase(ip))
+        if (StringUtils.isBlank(ip) || "unknown".equalsIgnoreCase(ip))
         {
             ip = request.getHeader("X-Forwarded-For");
         }
-        if (StringUtils.isEmpty(ip) || "unknown".equalsIgnoreCase(ip))
+        if (StringUtils.isBlank(ip) || "unknown".equalsIgnoreCase(ip))
         {
             ip = request.getHeader("WL-Proxy-Client-IP");
         }
-        if (StringUtils.isEmpty(ip) || "unknown".equalsIgnoreCase(ip))
+        if (StringUtils.isBlank(ip) || "unknown".equalsIgnoreCase(ip))
         {
             ip = request.getHeader("X-Real-IP");
         }
 
-        if (StringUtils.isEmpty(ip) || "unknown".equalsIgnoreCase(ip))
+        if (StringUtils.isBlank(ip) || "unknown".equalsIgnoreCase(ip))
         {
             ip = request.getRemoteAddr();
         }

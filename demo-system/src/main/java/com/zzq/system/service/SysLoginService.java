@@ -1,7 +1,7 @@
 package com.zzq.system.service;
 
 import com.zzq.common.core.domain.AjaxResult;
-import com.zzq.system.domain.LoginQuery;
+import com.zzq.system.domain.query.LoginQuery;
 
 /**
  * @Project : zzq-demo-backend

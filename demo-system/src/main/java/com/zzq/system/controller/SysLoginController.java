@@ -1,7 +1,7 @@
 package com.zzq.system.controller;
 
 import com.zzq.common.core.domain.AjaxResult;
-import com.zzq.system.domain.LoginQuery;
+import com.zzq.system.domain.query.LoginQuery;
 import com.zzq.system.service.SysLoginService;
 import com.zzq.system.service.SysMenuService;
 import com.zzq.system.service.SysUserService;

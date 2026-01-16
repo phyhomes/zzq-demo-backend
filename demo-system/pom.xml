@@ -6,7 +6,7 @@
         <groupId>com.zzq</groupId>
         <artifactId>backend-demo</artifactId>
         <version>1.0.0</version>
-        <relativePath/> <!-- lookup parent from repository -->
+        <relativePath>../pom.xml</relativePath> <!-- lookup parent from repository -->
     </parent>
     <artifactId>system</artifactId>
     <name>demo-system</name>
@@ -34,12 +34,7 @@
             <artifactId>framework</artifactId>
         </dependency>
 
-        <!-- MapStruct 对象转换依赖 -->
-        <dependency>
-            <groupId>io.github.linpeilie</groupId>
-            <artifactId>mapstruct-plus-spring-boot-starter</artifactId>
-            <scope>compile</scope>
-        </dependency>
+
 
 
         <dependency>
@@ -69,6 +64,13 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
+        <!-- MapStruct 对象转换依赖 -->
+        <dependency>
+            <groupId>io.github.linpeilie</groupId>
+            <artifactId>mapstruct-plus-spring-boot-starter</artifactId>
+            <scope>compile</scope>
         </dependency>
 
 

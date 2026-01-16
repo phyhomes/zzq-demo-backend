@@ -1,10 +1,10 @@
 package com.zzq.system.validator;
 
-import com.zzq.common.utils.StringUtils;
 import com.zzq.system.annotation.CaptchaRequired;
 import com.zzq.system.service.SysConfigService;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -21,7 +21,7 @@ public class CaptchaValidator implements ConstraintValidator<CaptchaRequired, St
         // 从配置信息中获取验证码开关，默认开启
         boolean captchaEnabled = sysConfigService.selectCaptchaEnabled();
         if (captchaEnabled) {
-            return !StringUtils.isBlank(s);
+            return StringUtils.isNotBlank(s);
         }
         return true;
     }

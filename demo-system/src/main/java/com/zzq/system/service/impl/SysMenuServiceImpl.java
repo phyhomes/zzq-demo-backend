@@ -2,18 +2,19 @@ package com.zzq.system.service.impl;
 
 import com.zzq.common.constant.Constants;
 import com.zzq.common.core.domain.AjaxResult;
-import com.zzq.common.utils.StringUtils;
+import com.zzq.common.utils.HttpUtils;
 import com.zzq.common.utils.TreeUtils;
 import com.zzq.framework.domain.dto.LoginUserDTO;
 import com.zzq.framework.utils.SecurityUtils;
-import com.zzq.system.domain.MetaVO;
-import com.zzq.system.domain.RouterVO;
+import com.zzq.system.domain.vo.MetaVO;
+import com.zzq.system.domain.vo.RouterVO;
 import com.zzq.system.domain.SysMenuTree;
 import com.zzq.system.mapper.SysMenuMapper;
 import com.zzq.system.service.SysMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.LinkedList;
@@ -196,7 +197,7 @@ public class SysMenuServiceImpl implements SysMenuService {
     public boolean isInnerLink(SysMenuTree menu)
     {
         // 不是外链 && 路径是链接的形式
-        return menu.getFrameFlag().equals(Constants.NO_FRAME) && StringUtils.isHttp(menu.getPath());
+        return menu.getFrameFlag().equals(Constants.NO_FRAME) && HttpUtils.isHttp(menu.getPath());
     }
 
     /**
@@ -222,17 +223,17 @@ public class SysMenuServiceImpl implements SysMenuService {
     public String getComponent(SysMenuTree menu)
     {
         String component = Constants.LAYOUT;
-        if (StringUtils.isNotEmpty(menu.getComponent()) && !isMenuFrame(menu))
+        if (StringUtils.isNotBlank(menu.getComponent()) && !isMenuFrame(menu))
         {
             component = menu.getComponent();
         }
-        else if (StringUtils.isEmpty(menu.getComponent())
+        else if (StringUtils.isNotBlank(menu.getComponent())
                 && !Objects.equals(menu.getParentId(), MENU_ROOT_ID)
                 && isInnerLink(menu))
         {
             component = Constants.INNER_LINK;
         }
-        else if (StringUtils.isEmpty(menu.getComponent()) && isParentView(menu))
+        else if (StringUtils.isNotBlank(menu.getComponent()) && isParentView(menu))
         {
             component = Constants.PARENT_VIEW;
         }

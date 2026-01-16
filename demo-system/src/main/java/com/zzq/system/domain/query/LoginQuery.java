@@ -1,8 +1,9 @@
-package com.zzq.system.domain;
+package com.zzq.system.domain.query;
 
+import com.zzq.common.utils.LocalStringUtils;
 import com.zzq.system.annotation.CaptchaRequired;
 import com.zzq.common.annotation.Xss;
-import com.zzq.common.utils.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import com.zzq.system.config.LoginConfig;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -68,9 +69,9 @@ public class LoginQuery {
         Random random = new Random();
         int repeatLeft = random.nextInt(10) + 1;
         int repeatRight = random.nextInt(10) + 1;
-        return StringUtils.repeat(StringUtils.STAR, repeatLeft)
-                + StringUtils.mask(password, 0, 0)
-                + StringUtils.repeat(StringUtils.STAR, repeatRight);
+        return StringUtils.repeat(LocalStringUtils.STAR, repeatLeft)
+                + LocalStringUtils.mask(password, 0, 0)
+                + StringUtils.repeat(LocalStringUtils.STAR, repeatRight);
     }
 
     public void setPassword(String password)

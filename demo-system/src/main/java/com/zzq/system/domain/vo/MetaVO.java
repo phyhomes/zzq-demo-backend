@@ -1,6 +1,6 @@
-package com.zzq.system.domain;
+package com.zzq.system.domain.vo;
 
-import com.zzq.common.utils.StringUtils;
+import com.zzq.common.utils.HttpUtils;
 
 /**
  * 路由显示信息
@@ -58,7 +58,7 @@ public class MetaVO
         this.title = title;
         this.icon = icon;
         this.noCache = noCache;
-        if (StringUtils.isHttp(link))
+        if (HttpUtils.isHttp(link))
         {
             this.link = link;
         }

@@ -3,7 +3,7 @@ package com.zzq.common.utils.ip;
 import com.zzq.common.config.ProjectConfig;
 import com.zzq.common.constant.Constants;
 import com.zzq.common.utils.HttpUtils;
-import com.zzq.common.utils.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.json.JSONTokener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

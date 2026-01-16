@@ -1,6 +1,11 @@
 package com.zzq.system.service;
 
+import com.zzq.common.core.domain.AjaxResult;
 import com.zzq.framework.domain.entity.SysDept;
+import com.zzq.system.domain.dto.SysDeptDTO;
+import jakarta.validation.Valid;
+
+import java.util.List;
 
 /**
  * @Project : zzq-demo-backend
@@ -10,4 +15,12 @@ import com.zzq.framework.domain.entity.SysDept;
  */
 public interface SysDeptService {
     public SysDept selectDeptById(Long deptId);
+
+    List<SysDept> listDept();
+
+    void checkDeptDataScope(Long deptId);
+
+    void checkDeptNameUnique(Long deptId, Long parentId, String name);
+
+    AjaxResult update(SysDeptDTO dept);
 }

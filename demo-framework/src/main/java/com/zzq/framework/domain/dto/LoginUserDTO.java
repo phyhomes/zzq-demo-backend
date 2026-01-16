@@ -5,9 +5,11 @@ import com.zzq.framework.domain.entity.SysDept;
 import com.zzq.framework.domain.entity.SysUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.CollectionUtils;
 
 import java.io.Serial;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -76,12 +78,10 @@ public class LoginUserDTO implements UserDetails {
      */
     private List<SysRoleDTO> roles;
 
-    public LoginUserDTO()
-    {
+    public LoginUserDTO() {
     }
 
-    public LoginUserDTO(SysUser user, Set<String> permissions)
-    {
+    public LoginUserDTO(SysUser user, Set<String> permissions) {
         this.user = user;
         this.permissions = permissions;
     }
@@ -93,7 +93,20 @@ public class LoginUserDTO implements UserDetails {
         this.permissions = permissions;
     }
 
+    public boolean isAdmin() {
+        if (user.isAdmin()) {
+            return true;
+        }
 
+        if (!CollectionUtils.isEmpty(roles)) {
+            for (SysRoleDTO role : roles) {
+                if (role.isAdmin()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
 
     @Override

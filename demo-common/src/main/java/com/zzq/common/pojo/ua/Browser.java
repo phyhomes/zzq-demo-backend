@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
  * @Project : zzq-demo-backend
  * @Time : 2025-12-18 00:18
  * @Author : ZZQ
- * @Desc : todo
+ * @Desc : 浏览器对象
  */
 public class Browser extends UserAgentInfo {
     @Serial

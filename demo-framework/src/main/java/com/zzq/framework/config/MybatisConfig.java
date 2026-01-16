@@ -1,6 +1,6 @@
 package com.zzq.framework.config;
 
-import com.zzq.common.utils.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.io.VFS;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;

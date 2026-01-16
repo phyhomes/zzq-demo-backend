@@ -1,9 +1,9 @@
 package com.zzq.common.validator;
 
 import com.zzq.common.annotation.Xss;
-import com.zzq.common.utils.StringUtils;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

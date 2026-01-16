@@ -1,6 +1,8 @@
 package com.zzq.common.utils;
 
 import com.zzq.common.constant.Constants;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.MediaType;
@@ -22,6 +24,17 @@ import java.security.cert.X509Certificate;
  */
 public class HttpUtils {
     private static final Logger log = LoggerFactory.getLogger(HttpUtils.class);
+
+    /**
+     * 是否为http(s)://开头
+     *
+     * @param link 链接
+     * @return 结果
+     */
+    public static boolean isHttp(String link) {
+        // CS: 不忽略大小写
+        return Strings.CS.startsWithAny(link, Constants.HTTP, Constants.HTTPS);
+    }
 
     /**
      * 向指定 URL 发送GET方法的请求

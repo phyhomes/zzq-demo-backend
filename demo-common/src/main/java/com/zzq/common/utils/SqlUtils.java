@@ -4,6 +4,7 @@ import com.zzq.common.constant.HttpStatus;
 import com.zzq.common.constant.ModuleConstants;
 import com.zzq.common.exception.BaseException;
 import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * sql操作工具类

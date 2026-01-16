@@ -1,6 +1,6 @@
 package com.zzq.system.mapper;
 
-import com.zzq.system.domain.SysConfigVO;
+import com.zzq.system.domain.vo.SysConfigVO;
 import com.zzq.system.domain.entity.SysConfig;
 import org.apache.ibatis.annotations.Mapper;
 

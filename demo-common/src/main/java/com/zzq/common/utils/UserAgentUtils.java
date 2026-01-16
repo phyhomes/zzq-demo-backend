@@ -5,6 +5,7 @@ import com.zzq.common.pojo.ua.Engine;
 import com.zzq.common.pojo.ua.OS;
 import com.zzq.common.pojo.ua.Platform;
 import com.zzq.common.pojo.ua.UserAgent;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @Project : zzq-demo-backend

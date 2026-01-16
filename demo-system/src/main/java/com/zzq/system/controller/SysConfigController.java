@@ -1,7 +1,7 @@
 package com.zzq.system.controller;
 
 import com.zzq.common.core.domain.AjaxResult;
-import com.zzq.system.domain.SysConfigQuery;
+import com.zzq.system.domain.query.SysConfigQuery;
 import com.zzq.system.domain.entity.SysConfig;
 import com.zzq.system.service.SysConfigService;
 import io.github.linpeilie.Converter;

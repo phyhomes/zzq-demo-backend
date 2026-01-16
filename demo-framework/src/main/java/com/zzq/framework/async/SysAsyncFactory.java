@@ -4,13 +4,13 @@ import com.zzq.common.constant.Constants;
 import com.zzq.common.pojo.ua.UserAgent;
 import com.zzq.common.utils.ServletUtils;
 import com.zzq.common.utils.SpringUtils;
-import com.zzq.common.utils.StringUtils;
 import com.zzq.common.utils.UserAgentUtils;
 import com.zzq.common.utils.ip.AddressUtils;
 import com.zzq.common.utils.ip.IpUtils;
 import com.zzq.framework.domain.entity.SysLoginInfo;
 import com.zzq.framework.domain.entity.SysOperationLog;
 import com.zzq.framework.service.SysService;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,11 +45,11 @@ public class SysAsyncFactory {
             public void run()
             {
                 String address = AddressUtils.getRealAddressByIP(ip);
-                String s = "[" + StringUtils.defaultString(ip, "") + "]" +
+                String s = "[" + StringUtils.defaultIfBlank(ip, "") + "]" +
                         address +
-                        "[" + StringUtils.defaultString(username, "") + "]" +
-                        "[" + StringUtils.defaultString(status, "") + "]" +
-                        "[" + StringUtils.defaultString(message, "") + "]";
+                        "[" + StringUtils.defaultIfBlank(username, "") + "]" +
+                        "[" + StringUtils.defaultIfBlank(status, "") + "]" +
+                        "[" + StringUtils.defaultIfBlank(message, "") + "]";
                 // 打印信息到日志
                 log.info(s, args);
                 // 获取客户端操作系统

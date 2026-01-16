@@ -1,7 +1,7 @@
 package com.zzq.system.domain.entity;
 
 import com.zzq.common.core.domain.BaseEntity;
-import com.zzq.system.domain.SysConfigVO;
+import com.zzq.system.domain.vo.SysConfigVO;
 import io.github.linpeilie.annotations.AutoMapper;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;

@@ -1,6 +1,7 @@
 package com.zzq.common.core.domain;
 
-import com.zzq.common.utils.StringUtils;
+import com.zzq.common.utils.LocalStringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Objects;
@@ -35,7 +36,7 @@ public class PageQuery {
         if (StringUtils.isEmpty(orderByColumn)) {
             return "";
         }
-        return StringUtils.toUnderScoreCase(orderByColumn) + " " + sortDirection;
+        return LocalStringUtils.toUnderScoreCase(orderByColumn) + " " + sortDirection;
     }
 
     public Integer getPageNum() {
