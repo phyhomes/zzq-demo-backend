@@ -18,9 +18,7 @@ public interface SysDeptService {
 
     List<SysDept> listDept();
 
-    void checkDeptDataScope(Long deptId);
-
-    void checkDeptNameUnique(Long deptId, Long parentId, String name);
-
     AjaxResult update(SysDeptDTO dept);
+
+    AjaxResult insert(SysDeptDTO dept);
 }

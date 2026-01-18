@@ -21,12 +21,9 @@ public class SysDeptDTO {
     private Long id;
 
     /** 部门名称 */
-    @NotBlank(message = "dept.name.not.blank")
-    @Size(max = 30, message = "dept.name.size")
     private String name;
 
     /** 父部门ID */
-    @NotNull(message = "dept.parent.id.not.blank")
     private Long parentId;
 
     /** 部门本级排序 */

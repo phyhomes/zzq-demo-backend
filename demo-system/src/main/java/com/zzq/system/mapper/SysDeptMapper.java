@@ -25,4 +25,10 @@ public interface SysDeptMapper {
     List<SysDept> selectDeptsByParentId(Long parentId);
 
     SysDept selectDeptById(Long id);
+
+    List<SysDept> selectDeptsByLevel(String s);
+
+    int insert(SysDept sysDept);
+
+    int updateLevelInBatch(List<SysDept> depts);
 }

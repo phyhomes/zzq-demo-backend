@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 import java.io.Serial;
+import java.util.List;
 
 /**
  * @Project : zzq-demo-backend
@@ -43,6 +44,9 @@ public class SysDept extends BaseEntity {
     /** 是否删除（1是，0否） */
     @JsonIgnore
     private Integer delFlag;
+
+    /** 子部门 */
+    private List<SysDept> children;
 
     public SysDept() {
     }
@@ -117,6 +121,14 @@ public class SysDept extends BaseEntity {
         this.delFlag = delFlag;
     }
 
+    public List<SysDept> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<SysDept> children) {
+        this.children = children;
+    }
+
     @Override
     public String toString() {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
@@ -133,6 +145,7 @@ public class SysDept extends BaseEntity {
             .append("createTime", getCreateTime())
             .append("updateBy", getUpdateBy())
             .append("updateTime", getUpdateTime())
+            .append("children", getChildren())
             .toString();
     }
 }

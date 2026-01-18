@@ -5,6 +5,8 @@ import com.zzq.common.core.domain.AjaxResult;
 import com.zzq.common.exception.BaseException;
 import com.zzq.common.utils.ConvertUtils;
 import com.zzq.common.utils.EscapeUtils;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import org.apache.commons.lang3.StringUtils;
@@ -92,8 +94,18 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BaseException.class)
     public AjaxResult handleBaseException(BaseException e, HttpServletRequest request) {
         String requestURI = request.getRequestURI();
-        log.warn("请求地址'{}',发生系统异常.", requestURI, e);
+        log.warn("请求地址'{}'，发生系统异常.", requestURI, e);
         return AjaxResult.error(e.getCode(), e.getMessage());
+    }
+
+    /**
+     * JWT Token异常
+     */
+    @ExceptionHandler(ExpiredJwtException.class)
+    public AjaxResult handleJwtException(ExpiredJwtException e, HttpServletRequest request) {
+        String requestURI = request.getRequestURI();
+        log.warn("请求地址'{}'，JWT校验发生异常。异常信息：{}", requestURI, e.getMessage());
+        return AjaxResult.error(HttpStatus.UNAUTHORIZED, e.getMessage());
     }
 
     /**
