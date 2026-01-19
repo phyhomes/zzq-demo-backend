@@ -20,10 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -131,13 +128,24 @@ public class SysDeptServiceImpl implements SysDeptService {
             throw new BaseException(ModuleConstants.SYSTEM, HttpStatus.FORBIDDEN, "找不到要更新的部门！");
         }
         // 校验父部门
-        if (dept.getParentId() == null) {
-            dept.setParentId(oldDept.getParentId());
-        } else {
-            SysDept parentDept = sysDeptMapper.selectDeptById(dept.getParentId());
+        if (dept.getParentId() == null || Objects.equals(dept.getParentId(), oldDept.getParentId())) {
+            // 父部门不变，直接更新
+            // 校验部门名称，父部门相同的情况下，部门名称不能重复
+            checkDeptNameUnique(deptId, oldDept.getParentId(), dept.getName());
+            SysDept sysDept = converter.convert(dept, SysDept.class);
+            return update(sysDept);
+        }
+
+        // 父部门变了
+        // 获取父部门信息
+        SysDept parentDept = null;
+        List<SysDept> children = sysDeptMapper.selectDeptsByLevel(oldDept.getLevel() + ".");
+        // 判断父部门id不为0的情况
+        if (dept.getParentId() != 0L) {
+            parentDept = sysDeptMapper.selectDeptById(dept.getParentId());
+            // 校验父部门
             checkParentDept(parentDept);
             // 父部门不能是子部门
-            List<SysDept> children = sysDeptMapper.selectDeptsByLevel(oldDept.getLevel());
             if (children.stream().anyMatch(child -> child.getId().equals(dept.getParentId()))) {
                 throw new BaseException(ModuleConstants.SYSTEM, HttpStatus.PARA_ERROR, "父部门不能是当前部门的子部门！");
             }
@@ -146,85 +154,55 @@ public class SysDeptServiceImpl implements SysDeptService {
         checkDeptNameUnique(deptId, dept.getParentId(), dept.getName());
 
         SysDept sysDept = converter.convert(dept, SysDept.class);
-        sysDept.setUpdateBy(SecurityUtils.getUsername());
-        sysDept.setLevel(oldDept.getLevel());
-
-        // 判断要更新的内容是否影响部门层级变化
-        if (Objects.equals(sysDept.getSeq(), oldDept.getSeq())
-            && Objects.equals(sysDept.getParentId(), oldDept.getParentId())) {
-            // 不影响部门层级变化，直接更新
-            return update(sysDept);
-        }
-
-        // String oldLevel = oldDept.getLevel();
-        SysDept parentDept = sysDeptMapper.selectDeptById(sysDept.getParentId());
         // 处理这个要更新的部门和同级之间的关系
         List<SysDept> siblingDepts = sysDeptMapper.selectDeptsByParentId(sysDept.getParentId());
-        if (CollectionUtils.isEmpty(siblingDepts)) {
-            // 设置level后直接更新
-            String level = parentDept.getLevel() + ".1";
-            sysDept.setLevel(level);
-            return update(sysDept);
-        }
-        // 只有一个同级
-        if (siblingDepts.size() == 1) {
-            if (siblingDepts.getFirst().getId().equals(sysDept.getId())) {
-                // 同级部门就是自己，直接更新
-                return update(sysDept);
-            } else {
-                // 同级部门不是自己，加自己
-                siblingDepts.add(sysDept);
-            }
-        } else {
-            // 有多个同级
-            // 过滤掉同级中的自己（可能存在也可能不存在）
-            siblingDepts = siblingDepts.stream()
-                    // 过滤，满足条件的才会被留下
-                    .filter(siblingDept -> !siblingDept.getId().equals(sysDept.getId()))
-                    .collect(Collectors.toList());
-            // 加自己
-            siblingDepts.add(sysDept);
-        }
-
-        // 排序
-        siblingDepts.sort(Comparator.comparing(SysDept::getSeq,
-                        Comparator.nullsLast(Comparator.naturalOrder())));
-        List<String> oldLevelList = new ArrayList<>();
-        for (int i = 0; i < siblingDepts.size(); i++) {
-            String oldLevel = siblingDepts.get(i).getLevel();
-            oldLevelList.add(oldLevel);
-            String newLevel = parentDept == null ? String.valueOf(i + 1) : parentDept.getLevel() + "." + (i + 1);
-            SysDept siblingDept = siblingDepts.get(i);
-            if (!Objects.equals(oldLevel, newLevel)) {
-                siblingDept.setUpdateBy(SecurityUtils.getUsername());
-                siblingDept.setLevel(newLevel);
-                // 处理各自的下级
-                // 获取全部下级部门
-                List<SysDept> childrenDepts = sysDeptMapper.selectDeptsByLevel(oldLevel + ".");
-                siblingDept.setChildren(childrenDepts);
-            }
-        }
-
-        List<SysDept> allList = new ArrayList<>();
-        for (int i = 0; i < siblingDepts.size(); i++) {
-            String oldLevel = oldLevelList.get(i);
-            SysDept siblingDept = siblingDepts.get(i);
-            String newLevel = siblingDept.getLevel();
-            if (!oldLevel.equals(newLevel)) {
-                List<SysDept> childrenDepts = siblingDept.getChildren();
-                for (SysDept childrenDept : childrenDepts) {
-                    String level = newLevel + childrenDept.getLevel().substring(oldLevel.length());
-                    childrenDept.setUpdateBy(SecurityUtils.getUsername());
-                    childrenDept.setLevel(level);
-                }
-                allList.add(siblingDept);
-                allList.addAll(childrenDepts);
-            }
-        }
-
-        sysDeptMapper.updateLevelInBatch(allList);
-        // 最后更新其它字段
+        int uniqueLevel = getUniqueLevel(siblingDepts);
+        String oldLevel = oldDept.getLevel();
+        String newLevel = parentDept == null ? String.valueOf(uniqueLevel) : parentDept.getLevel() + "." + uniqueLevel;
+        children.forEach(child -> {
+            String level = newLevel + child.getLevel().substring(oldLevel.length());
+            child.setLevel(level);
+            child.setUpdateBy(SecurityUtils.getUsername());
+        });
+        // 批量更新所有子部门
+        sysDeptMapper.updateLevelInBatch(children);
+        // 更新自己
+        sysDept.setLevel(newLevel);
         return update(sysDept);
+    }
+
+    /**
+     * 获取唯一的部门层级数
+     *
+     * @param siblingDepts 同级部门列表
+     * @return 层级
+     */
+    private int getUniqueLevel(List<SysDept> siblingDepts) {
+        if (CollectionUtils.isEmpty(siblingDepts)) {
+            return 1;
+        }
+        int[] levels = siblingDepts.stream()
+                .map(SysDept::getLevel)  // 获取level字段
+                .map(level -> level.split("\\."))  // 按.分割
+                .map(parts -> parts[parts.length - 1])  // 取最后一个部分
+                .mapToInt(Integer::parseInt)  // 转为整数
+                .toArray();
+        Arrays.sort(levels);
+
+        // 从2开始查找第一个不在数组中的数
+        int candidate = 2;
+        for (int level : levels) {
+            if (candidate < level) {
+                // 找到了不在数组中的最小数
+                break;
+            } else if (candidate == level) {
+                // 如果相等，候选数递增
+                candidate++;
+            }
+            // 如果candidate > level，继续循环
+        }
+
+        return candidate;
     }
 
     /**
@@ -234,6 +212,7 @@ public class SysDeptServiceImpl implements SysDeptService {
      * @return 结果
      */
     private AjaxResult update(SysDept sysDept) {
+        sysDept.setUpdateBy(SecurityUtils.getUsername());
         int rows = sysDeptMapper.update(sysDept);
         return AjaxResult.toAjaxResult(rows, "put.success", "put.failed");
     }
@@ -254,7 +233,8 @@ public class SysDeptServiceImpl implements SysDeptService {
         checkDeptDataScope(parentId);
         // 处理同级部门之间的关系
         List<SysDept> siblingDepts = sysDeptMapper.selectDeptsByParentId(parentId);
-        String level = siblingDepts == null ? "1" : siblingDepts.size() + 1 + "";
+        int uniqueLevel = getUniqueLevel(siblingDepts);
+        String level = String.valueOf(uniqueLevel);
         if (parentId != 0) {
             SysDept parentDept = sysDeptMapper.selectDeptById(parentId);
             checkParentDept(parentDept);

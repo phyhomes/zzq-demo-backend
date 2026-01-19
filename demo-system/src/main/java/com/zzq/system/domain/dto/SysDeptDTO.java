@@ -1,7 +1,9 @@
 package com.zzq.system.domain.dto;
 
+import com.zzq.common.constant.Constants;
 import com.zzq.framework.domain.entity.SysDept;
 import io.github.linpeilie.annotations.AutoMapper;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -29,8 +31,8 @@ public class SysDeptDTO {
     /** 部门本级排序 */
     private Integer seq;
 
-
     /** 部门状态（1正常 0停用） */
+    @Max(value = 1, message = "dept.status.error")
     private Integer status;
 
     /** 备注信息 */

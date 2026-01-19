@@ -51,10 +51,10 @@ public class SysDeptController {
     @PostMapping
     @Log(module = "部门管理", businessType = BusinessType.INSERT)
     @PreAuthorize("@ss.hasPermi('system:dept:add')")
-    public AjaxResult insert(@RequestBody SysDeptDTO dept) {
+    public AjaxResult insert(@Valid @RequestBody SysDeptDTO dept) {
         log.info("新增部门：{}", dept);
         // 校验部门状态值
-        checkDeptStatus(dept.getStatus());
+        // checkDeptStatus(dept.getStatus());
         // 检验部门名称
         if (StringUtils.isBlank(dept.getName())) {
             return AjaxResult.error(HttpStatus.PARA_ERROR, "dept.name.not.blank");
@@ -76,14 +76,14 @@ public class SysDeptController {
     @PutMapping
     @Log(module = "部门管理", businessType = BusinessType.UPDATE)
     @PreAuthorize("@ss.hasPermi('system:dept:edit')")
-    public AjaxResult update(@Valid @RequestBody SysDeptDTO dept) {
+    public AjaxResult update(@RequestBody SysDeptDTO dept) {
         log.info("修改部门：{}", dept);
         Long deptId = dept.getId();
         if (deptId == null) {
             return AjaxResult.error("dept.id.not.blank");
         }
         // 校验部门状态值
-        checkDeptStatus(dept.getStatus());
+        // checkDeptStatus(dept.getStatus());
         // 校验父部门
         if (deptId.equals(dept.getParentId())) {
             return AjaxResult.error("dept.parent.not.self");
